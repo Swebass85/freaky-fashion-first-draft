@@ -1,0 +1,45 @@
+# Express project - Freaky-Fashion
+
+Webbsida för Freaky-Fashion, en modesite som säljer kläder
+
+## Kom igång - Installera beroenden 
+
+npm install 
+
+### Browser-sync och Nodemon
+1. npm install --save-dev concurrently nodemon browser-sync
+2. lägg till i package.json
+"scripts": {
+  "dev": "concurrently \"npm run server\" \"npm run client\"",
+  "server": "nodemon app.js",
+  "client": "browser-sync start --proxy \"localhost:3000\" --files \"public/**/*\""
+}
+
+3. npm run dev
+
+### Installera SQLite
+1. npm install sqlite3
+2. skapa en folder som du kallar "Data"
+3. skapa .sql fil som kallar "freaky-fashion.sql"
+4. I filen lägger du till följande (kanske kompletterar med fler tables men börja med products)
+
+DROP TABLE IF EXISTS users;   (förebygger konflikter)                                                           
+
+CREATE TABLE products ( 
+    id INTEGER PRIMARY KEY AUTOINCREMENT,  (ID: alla nya produkter har ett nytt ID, INTEGER: måste vara en siffra, PRIMARY KEY: siffran är unik, AUTOINCREMENT: SQLite ökar antalaet i takt med att du lägger till dom, ie 1,2,3,4)
+    
+    name TEXT NOT NULL, (name: är en string (ej siffra), NOT NULL: Du måste lägga till ett värde här) 
+    
+    email TEXT UNIQUE NOT NULL, (email: är en string (ej siffra), UNIQUE: kan inte lägga till två likadana emails, NOT NULL: Du måste lägga till ett värde här) 
+    
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP  (Spara ett värde "created_at" som representerar tid/datum DATETIME, förvänta dig att den här kolumnen ska ha CURRENT_TIMESTAMP) DATETIME är inte nödvändigt men viktigt om man för över datan till andra databaser som PostrgrateSQL och MySQL, det ser också tydligare ut för andra användare (att det är tid man är ute efter)
+
+     price REAL NOT NULL, (REAL = decimaler (viktigt när det handlar om pengar))
+    );
+
+
+
+
+
+
+

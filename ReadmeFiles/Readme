@@ -1,0 +1,87 @@
+# Express project - Freaky-Fashion
+
+Webbsida för Freaky-Fashion, en modesite som säljer kläder
+
+## Lägg upp projekt på GIT
+1. cmd > git init
+2. Finns inte .gitignore (freaky-fashion-first-draft/.gitignore),    skapa den. Lägg till node_modules/ och database/freaky-fashion.db
+.env. spara filen
+3. cmd > git status (node_modules och database/freaky-fashion.db ska inte vara med på listan)
+4. Lägg till filer: cmd > git add .
+5. cmd > git commit -m "initial project setup"
+
+Om du vill:
+
+6. git remote add origin https://github.com/swebass85/freaky-fashion.git
+git branch -M main
+git push -u origin main
+
+## Kom igång - Installera beroenden 
+
+npm install 
+
+### Browser-sync och Nodemon
+1. npm install --save-dev concurrently nodemon browser-sync
+2. lägg till i package.json
+"scripts": {
+  "dev": "concurrently \"npm run server\" \"npm run client\"",
+  "server": "nodemon app.js",
+  "client": "browser-sync start --proxy \"localhost:3000\" --files \"public/**/*\""
+}
+
+3. npm run dev
+
+### Skapa databas
+1. npm install sqlite3
+2. skapa en folder som du kallar "Database"
+3. skapa .sql fil som kallar "schema.sql"
+4. I filen lägger du till följande (kanske kompletterar med fler tables men börja med products)
+                                                            
+DROP TABLE IF EXISTS products;
+
+CREATE TABLE products (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  type TEXT NOT NULL,
+  brand TEXT NOT NULL,
+  price REAL NOT NULL,
+  picture_front TEXT,
+  picture_back TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+5 Skapa databas fil /database/freaky-fashion.db
+
+Lägg till kod: 
+  const Database = require("better-sqlite3");
+  const db = new Database("./database/freaky-fashion.db");
+
+module.exports = db;
+
+6. Skapa init.js fil > /database/init.js
+
+init.js skapar .db filen, kör SQL och bygger tabellen (schema.sql) -> Det här är bara ett setup script.
+Lägg till följande kod:
+  const fs = require("fs");
+  const Database = require("better-sqlite3");
+  const path = require("path");
+  const db = new Database(
+  path.join(__dirname, "freaky-fashion.db")
+  );
+  const schema = fs.readFileSync("./schema.sql", "utf-8");
+  db.exec(schema);
+  console.log("✅ Database initialized successfully");
+
+cmd > node init.js (bara en gång, det skapar .db filen)
+
+Du ska nu ha en .db fil med en tabell som heter "products" med de värden du lagt in i schema.sql
+
+
+
+
+
+
+
+
+
+
+
