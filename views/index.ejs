@@ -1,11 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Freaky Fashion</title>
+    <link rel="icon" href="icons/favicon-16px.png" />
+    <link rel="stylesheet" href="stylesheets/style.css" />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    
+    <header>
+      
+      <div class="site__header">
+        <img src="/images/logo-mobile.webp" alt="Freaky Fashion Logo" id="header__logotyp" />
+        
+        <div class="header__top">
+          
+          <form class="header__search">
+            
+            <input type="text" placeholder="Sök produkt" class="search__bar">
+          
+          </form>
+          
+          
+          <div class="header__icons">
+            <img src="/icons/heart-fill.svg" alt="heart icon" class="nav__icons" id="heart__icon">
+            <img src="/icons/shopping-basket.svg" alt="shopping cart icon" class="nav__icons" id="shopping__icon">
+            <img src="/icons/log-in.svg" alt="login icon" class="nav__icons" id="login__icon">
+          </div> <!-- /header__icons -->
+        </div> <!-- /header__top -->
+      </div> <!-- /site-header -->
+        
+        <nav class="header__nav">
+          <ul>
+            <li><a href="/Nyheter">Nyheter</a></li>
+            <li><a href="/products">Kläder</a></li>
+            <li><a href="/about">Accessoarer</a></li>
+              <li><a href="/contact">Skor</a></li>
+            </ul>
+          </nav>
+    </header>
+
+    <div class="main">
+      <section class="hero">
+        <video class="hero__video" autoplay muted loop playsinline>
+          <source src="/images/hero-video.mp4" type="video/mp4">
+        </video>
+        <hero class="hero__info">
+          <h1>Freaky Fashion</h1>
+          <p>Välkommen till sommarens hetaste look!</p>
+        </hero>
+      </section>
+      <section class="products">
+          <% products.forEach(product => { %>
+          <div class="product__card">
+            <div class="product__card--wrapper">
+              <div class="product__card--image-container">
+                <img 
+                  src="<%= product.picture_front %>" 
+                  alt="<%= product.name %>" 
+                  class="product__card--image"
+                  id="product__card--image-front"
+                >
+                <img 
+                  src="<%= product.picture_back %>"
+                  alt="<%= product.type %>"
+                  class="product__card--image"
+                  id="product__card--image-back"
+                > 
+              </div>
+              <button class="product__card--icons" id="nyheter">Nyheter</button>
+              <img src="/icons/heart.svg" alt="heart icon no fill" class="product__card--icons" id="heart__icon--nofill">
+              <div class="product__card--info">
+                <div class="product__card--info--header">
+                  <h3><%= product.type %></h3>
+                  <p><%= product.price %> SEK</p>
+                </div>
+                <p><%= product.brand %></p>
+              </div> <!-- /product__card--wrapper -->
+            </div>
+          </div> <!-- /product__card -->
+          <% }) %>   
+        </section>
+      
+    </main>
+
+    <footer>
+      <p>&copy; 2024 Freaky Fashion. All rights reserved.</p>
+    </footer>
   </body>
 </html>

@@ -9,8 +9,13 @@ Webbsida för Freaky-Fashion, en modesite som säljer kläder
 3. cmd > git status (node_modules och database/freaky-fashion.db ska inte vara med på listan)
 4. Lägg till filer: cmd > git add .
 5. cmd > git commit -m "initial project setup"
+6. cmd > git add .
+7. cmd > git commit -m "beskriv vad du har ändrat"
+8. cmd > git push
 
-Om du vill:
+add > commit > push
+
+Om du vill lägga upp nytt repo (annars gör manuellt på github)
 
 6. git remote add origin https://github.com/swebass85/freaky-fashion.git
 git branch -M main
@@ -49,13 +54,13 @@ CREATE TABLE products (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-5 Skapa databas fil /database/freaky-fashion.db
+5 Skapa databas connection fil /database/freaky-fashion.db
 
 Lägg till kod: 
   const Database = require("better-sqlite3");
   const db = new Database("./database/freaky-fashion.db");
 
-module.exports = db;
+  module.exports = db;
 
 6. Skapa init.js fil > /database/init.js
 
@@ -67,13 +72,43 @@ Lägg till följande kod:
   const db = new Database(
   path.join(__dirname, "freaky-fashion.db")
   );
-  const schema = fs.readFileSync("./schema.sql", "utf-8");
+  const schema = fs.readFileSync(path.join(__dirname, "schema.sql"), "utf-8");
   db.exec(schema);
   console.log("✅ Database initialized successfully");
 
 cmd > node init.js (bara en gång, det skapar .db filen)
 
 Du ska nu ha en .db fil med en tabell som heter "products" med de värden du lagt in i schema.sql
+
+När du är klar med detta installera sqolite3 > cmd > npm install sqlite3
+
+### Skapa din hemsida och börja redigera index.ejs
+
+### Skapa produkt kort 
+Lägg in följande kod i index.js och ersätt det som var där innan.
+
+  /* GET home page. */
+router.get("/", function (req, res, next) {
+  db.all("SELECT * FROM products", [], (err, products) => {
+    if (err) {
+      return next(err);
+    }
+
+    res.render("index", {
+      title: "Freaky Fashion",
+      products: products,
+    });
+  });
+});
+
+module.exports = router;
+
+Du kan nu koppla din databas till index.ejs. Starta om och kör npm run dev efter du lagt till sökvägar till databasen i index.ejs.
+
+
+
+
+
 
 
 
