@@ -14,36 +14,38 @@ body {
   font-family: system-ui, sans-serif;
 }
 
-header{
+header {
   margin: 1rem 1rem;
 }
 
-a{
+a {
   text-decoration: none;
   color: black;
 }
 
-footer{
+a:hover {
+  color: magenta;
+}
+
+footer {
   text-align: center;
   padding: 1rem;
   background-color: black;
   color: white;
 }
 
-
-
-.site__header{
+.site__header {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-#header__logotyp{
+#header__logotyp {
   max-width: 500px;
   margin: 0 auto;
 }
 
-.header__top{
+.header__top {
   display: flex;
   align-items: center;
   gap: 3rem;
@@ -51,20 +53,20 @@ footer{
   margin-bottom: 1rem;
 }
 
-.header__search{
+.header__search {
   flex: 1;
 }
 
-.site__header .favicons{
+.site__header .favicons {
   display: flex;
   gap: 1rem;
 }
 
-.nav__icons{
+.nav__icons {
   width: 2rem;
 }
 
-nav ul{
+nav ul {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -72,55 +74,63 @@ nav ul{
   align-items: flex-start;
 }
 
-.search__bar{
+.search__bar {
   padding: 1rem;
   border-radius: 50px;
   width: 100%;
 }
 
-.search__bar:hover{
+.search__bar:hover {
   border-color: magenta;
 }
 
-.hero__video{
+.main > *{
+  padding: 0rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.hero__video {
   width: 100%;
   height: 100%;
 }
 
-.hero__info{
+.hero__info {
   text-align: center;
 }
 
-.products{
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
+ .hero__info--1024-wrapper {
+    display: none;
+  }
+
+.spots{
+  display: none;
 }
 
+.products {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
 
-.product__card--wrapper{
+.product__card--wrapper {
   position: relative;
 }
 
-.product__card--image-container{
+.product__card--image-container {
   position: relative;
   width: 100%;
   min-height: 40rem;
 }
 
-
-
-#product__card--image-front{
+#product__card--image-front {
   z-index: 1;
 }
 
-#product__card--image-front:hover{
+#product__card--image-front:hover {
   opacity: 0;
 }
 
-
-
-.product__card--image{
+.product__card--image {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -133,7 +143,7 @@ nav ul{
   z-index: 2;
 }
 
-#nyheter{
+#nyheter {
   top: 1rem;
   left: 1rem;
   background-color: black;
@@ -142,71 +152,221 @@ nav ul{
   border: none;
 }
 
-#heart__icon--nofill{
+#heart__icon--nofill {
   top: 37rem;
   right: 1rem;
   width: 2rem;
 }
 
-.product__card--info{
-  padding: 0rem 1rem;
+
+
+.services-items {
+  padding-bottom: 1rem;;
 }
 
-.product__card--info--header{
+.services-items li {
+  display: flex;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.product__card--info--header {
   display: flex;
   justify-content: space-between;
 }
 
 
-@media (min-width: 640px) {
+.accordion-item input {
+  display: none;
+}
 
-  .products{
+.accordion {
+  display: grid;
+}
+
+.accordion-header {
+  display: flex;
+  padding: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  position: relative;
+}
+
+.accordion-item {
+  border-bottom: 1px solid #ddd;
+}
+
+.accordion-header::after {
+  content: "+";
+  position: absolute;
+  right: 20px;
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.accordion-content {
+  text-align: left;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  padding-left: 2rem;
+}
+
+.accordion-content li {
+  padding: 4px;
+}
+
+.accordion-item input:checked + .accordion-header::after {
+  content: "-";
+}
+
+.accordion-item input:checked + .accordion-header + .accordion-content {
+  max-height: 300px;
+}
+
+@media (min-width: 640px) {
+  .products {
     grid-template-columns: repeat(2, 1fr);
+
   }
   
-.site__header{
-  flex-direction: row;
-  gap: 1rem;
-  width: 100%;
-}
-
-.header__top{
-  display: flex;
-  align-items: center;
-  width: 100%
-}
-
-.header__search{
-  max-width: 40rem;
-}
-
-
-#header__logotyp{
-  min-width: 300px;
-  flex: 1;
-  margin: 0;
-}
+  .site__header {
+    flex-direction: row;
+    gap: 1rem;
+    width: 100%;
+  }
   
-  nav ul{
+  .header__top {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .header__search {
+    max-width: 40rem;
+  }
+  
+  #header__logotyp {
+    min-width: 300px;
+  }
+  
+  nav ul {
     flex-direction: row;
     gap: 2rem;
   }
-
-
+  
+  .services-items {
+ display: grid;
+ grid-template-columns: repeat(2, auto);
+ justify-content: space-around;
+ margin: 0 auto;
+ width: 100%;
+  }
 }
-
 @media (min-width: 1024px) {
-  .header__icons{
+ 
+  .header__icons {
     display: flex;
     gap: 1rem;
   }
+  
+  .hero {
+    display: flex;
+    flex-direction: row-reverse;
+    height: 30rem;
+    width: 100%;
+    gap: 2rem;
+  }
 
-  .hero{
+  .hero__video {
+    max-width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .hero__video,
+  .hero__info--1024 {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+  }
+
+  .hero__info {
+    display: none;
+  }
+
+  .hero__info--1024-wrapper {
     display: flex;
     align-items: center;
-    gap: 2rem;
-    flex-direction: row-reverse;
-    padding: 0rem 2rem;
-
+    justify-content: center;
   }
+
+  .hero__info--1024 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: 2rem;
+  }
+
+  .spots{
+  display: flex;
+  gap: 1rem;
+ }
+
+ .spots__card{
+  position: relative;  
+  cursor: pointer;
+ }
+
+  .spots__card--overlay{
+  font-size: 2rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: whitesmoke;
+   transition: color 0.3s ease;
+   background-color: rgba(0, 0, 0, 0.5);
+   width: 100%;
+  height: 100%;
+ }
+
+ .spots__card--overlay h1{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+ }
+
+ .spots__card:hover .spots__card--overlay{
+  color: magenta;
+  opacity: none;
+  background-color: rgba(0, 0, 0, 0.1);
+  transition: background-color 0.5s ease;
+
+ }
+
+  .spots__card--image{
+  width: 100%;
+  height: 100%;;
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  
+
+
+
+  .products {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+
+   .services-items {
+    grid-template-columns: repeat(4, auto);
+  }
+
 }

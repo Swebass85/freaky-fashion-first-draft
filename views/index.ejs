@@ -46,10 +46,36 @@
         <video class="hero__video" autoplay muted loop playsinline>
           <source src="/images/hero-video.mp4" type="video/mp4">
         </video>
-        <hero class="hero__info">
+        <div class="hero__info">
           <h1>Freaky Fashion</h1>
           <p>Välkommen till sommarens hetaste look!</p>
-        </hero>
+        </div>
+        <div class="hero__info--1024-wrapper">
+          <div class="hero__info--1024">
+            <h1>Freaky Fashion</h1>
+            <p>Välkommen till sommarens hetaste look!</p>
+          </div>
+        </div><!-- /hero__info--1024-wrapper -->
+      </section>
+      <section class="spots">
+        <div class="spots__card">
+          <img src="\images\women\spots-women.webp" class="spots__card--image">
+          <div class="spots__card--overlay">
+            <h1>Women</h1>
+          </div>
+        </div>
+        <div class="spots__card">
+          <img src="\images\Men\spots-men.webp" class="spots__card--image">
+          <div class="spots__card--overlay">
+            <h1>Men</h1>
+          </div>
+        </div>
+        <div class="spots__card">
+          <img src="\images\kids\spots-kids.webp" class="spots__card--image">
+          <div class="spots__card--overlay">
+            <h1>Kids</h1>
+          </div>
+        </div>
       </section>
       <section class="products">
           <% products.forEach(product => { %>
@@ -75,15 +101,83 @@
                 <div class="product__card--info--header">
                   <h3><%= product.type %></h3>
                   <p><%= product.price %> SEK</p>
-                </div>
+                </div> <!-- /product__card--info--header -->
                 <p><%= product.brand %></p>
               </div> <!-- /product__card--wrapper -->
             </div>
           </div> <!-- /product__card -->
           <% }) %>   
         </section>
-      
+      </div>
+      <!-- FEATURE BANNER (icons row) -->
+      <ul class="services-items">
+        <li>
+          <img src="icons/globe.svg" alt="Free shipping icon" />
+          Gratis frakt och returer
+        </li>
+        <li>
+          <img src="icons/airplane.svg" alt="Express delivery icon" />
+          Expressfrakt
+        </li>
+        <li>
+          <img src="icons/shield.svg" alt="Safe payments icon" />
+          Säkra betalningar
+        </li>
+        <li>
+          <img src="icons/smile-emoji.svg" alt="News every day icon" />
+          Nyheter varje dag
+        </li>
+      </ul>
     </main>
+
+    <footer>
+      <!-- ACCORDION (shopping, my pages, customer service) -->
+
+      <div class="accordion">
+        <!-- Shopping -->
+        <div class="accordion-container">
+          <div class="accordion-item">
+            <input type="checkbox" id="item-1" />
+            <label for="item-1" class="accordion-header">Shopping</label>
+            <div class="accordion-content">
+              <ul>
+                <li><a href="#">Vinterjackor</a></li>
+                <li><a href="#">Pufferjackor</a></li>
+                <li><a href="#">Kappa</a></li>
+                <li><a href="#">Trenchcoats</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Mina Sidor -->
+          <div class="accordion-item">
+            <input type="checkbox" id="item-2" aria-label="Visa Mina Sidor" />
+            <label for="item-2" class="accordion-header">Mina Sidor</label>
+            <div class="accordion-content">
+              <ul>
+                <li><a href="#">Orderhistorik</a></li>
+                <li><a href="#">Adressbok</a></li>
+                <li><a href="#">Sparade kort</a></li>
+                <li><a href="#">Personuppgifter</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Kundtjänst -->
+          <div class="accordion-item">
+            <input type="checkbox" id="item-3" aria-label="Visa kundtjänst" />
+            <label for="item-3" class="accordion-header">Kundtjänst</label>
+            <div class="accordion-content">
+              <ul>
+                <li><a href="#">Vanliga frågor</a></li>
+                <li><a href="#">Retur & reklamation</a></li>
+                <li><a href="#">Kontakta oss</a></li>
+                <li><a href="#">Storleksguide</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
 
     <footer>
       <p>&copy; 2024 Freaky Fashion. All rights reserved.</p>
