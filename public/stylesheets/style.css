@@ -12,13 +12,15 @@
 body {
   line-height: 1.5;
   font-family: system-ui, sans-serif;
+  user-select: none;
 }
 
 header {
   margin: 1rem 1rem;
 }
 
-a {
+.main a,
+.header__nav a {
   text-decoration: none;
   color: black;
 }
@@ -84,7 +86,7 @@ nav ul {
   border-color: magenta;
 }
 
-.main > *{
+.main > * {
   padding: 0rem 1rem;
   margin-bottom: 1rem;
 }
@@ -98,11 +100,11 @@ nav ul {
   text-align: center;
 }
 
- .hero__info--1024-wrapper {
-    display: none;
-  }
+.hero__info--1024-wrapper {
+  display: none;
+}
 
-.spots{
+.spots {
   display: none;
 }
 
@@ -143,7 +145,7 @@ nav ul {
   z-index: 2;
 }
 
-#nyheter {
+.nyheter {
   top: 1rem;
   left: 1rem;
   background-color: black;
@@ -158,10 +160,8 @@ nav ul {
   width: 2rem;
 }
 
-
-
 .services-items {
-  padding-bottom: 1rem;;
+  padding-bottom: 1rem;
 }
 
 .services-items li {
@@ -174,7 +174,6 @@ nav ul {
   display: flex;
   justify-content: space-between;
 }
-
 
 .accordion-item input {
   display: none;
@@ -212,8 +211,12 @@ nav ul {
   padding-left: 2rem;
 }
 
-.accordion-content li {
+.accordion-content li,
+.accordion-content a {
   padding: 4px;
+  color: whitesmoke;
+  list-style: none;
+  text-decoration: none;
 }
 
 .accordion-item input:checked + .accordion-header::after {
@@ -227,49 +230,71 @@ nav ul {
 @media (min-width: 640px) {
   .products {
     grid-template-columns: repeat(2, 1fr);
-
   }
-  
+
   .site__header {
     flex-direction: row;
     gap: 1rem;
     width: 100%;
   }
-  
+
   .header__top {
     display: flex;
     align-items: center;
     width: 100%;
   }
-  
+
   .header__search {
     max-width: 40rem;
   }
-  
+
   #header__logotyp {
     min-width: 300px;
   }
-  
+
   nav ul {
     flex-direction: row;
     gap: 2rem;
   }
-  
+
   .services-items {
- display: grid;
- grid-template-columns: repeat(2, auto);
- justify-content: space-around;
- margin: 0 auto;
- width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    justify-content: space-around;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .accordion-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 0 auto;
+    gap: 4rem;
+  }
+
+  .accordion-header {
+    padding-left: 0.5rem;
+  }
+
+  .accordion-header::after {
+    display: none;
+  }
+
+  .accordion-content {
+    max-height: none;
+    padding: 0rem 0rem 1rem 0rem;
+  }
+
+  .accordion-item {
+    border-bottom: none;
   }
 }
 @media (min-width: 1024px) {
- 
   .header__icons {
     display: flex;
     gap: 1rem;
   }
-  
+
   .hero {
     display: flex;
     flex-direction: row-reverse;
@@ -310,63 +335,56 @@ nav ul {
     font-size: 2rem;
   }
 
-  .spots{
-  display: flex;
-  gap: 1rem;
- }
-
- .spots__card{
-  position: relative;  
-  cursor: pointer;
- }
-
-  .spots__card--overlay{
-  font-size: 2rem;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: whitesmoke;
-   transition: color 0.3s ease;
-   background-color: rgba(0, 0, 0, 0.5);
-   width: 100%;
-  height: 100%;
- }
-
- .spots__card--overlay h1{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
- }
-
- .spots__card:hover .spots__card--overlay{
-  color: magenta;
-  opacity: none;
-  background-color: rgba(0, 0, 0, 0.1);
-  transition: background-color 0.5s ease;
-
- }
-
-  .spots__card--image{
-  width: 100%;
-  height: 100%;;
-  position: relative;
-  background-color: rgba(0, 0, 0, 0.5);
+  .spots {
+    display: flex;
+    gap: 1rem;
   }
 
-  
+  .spots__card {
+    position: relative;
+    cursor: pointer;
+  }
 
+  .spots__card--overlay {
+    font-size: 2rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: whitesmoke;
+    transition: color 0.3s ease;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+  }
 
+  .spots__card--overlay h1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .spots__card:hover .spots__card--overlay {
+    color: magenta;
+    opacity: none;
+    background-color: rgba(0, 0, 0, 0.1);
+    transition: background-color 0.5s ease;
+  }
+
+  .spots__card--image {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
 
   .products {
     grid-template-columns: repeat(4, 1fr);
   }
 
-
-   .services-items {
+  .services-items {
     grid-template-columns: repeat(4, auto);
   }
-
 }

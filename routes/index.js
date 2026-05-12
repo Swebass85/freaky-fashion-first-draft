@@ -5,16 +5,24 @@ const db = new sqlite3.Database("./database/freaky-fashion.db");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
-  db.all("SELECT * FROM products", [], (err, products) => {
-    if (err) {
-      return next(err);
-    }
+  db.all(
+    `
+    SELECT *,
+    julianday('now') - julianday(created_at) AS age_days
+    FROM products
+    `,
+    [],
+    (err, products) => {
+      if (err) {
+        return next(err);
+      }
 
-    res.render("index", {
-      title: "Freaky Fashion",
-      products: products,
-    });
-  });
+      res.render("index", {
+        title: "Freaky Fashion",
+        products: products,
+      });
+    },
+  );
 });
 
 module.exports = router;

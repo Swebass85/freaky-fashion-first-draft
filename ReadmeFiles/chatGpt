@@ -1,0 +1,17 @@
+So I have added the HTML and CSS I want for my project. I have a SQL server called schema.sql and a database called freakyfashion.db. In my database I have a table where I added this to schema.sql:
+
+CREATE TABLE products (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  type TEXT NOT NULL,
+  brand TEXT NOT NULL,
+  price REAL NOT NULL,
+  picture_front TEXT,
+  picture_back TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+I want to make sure that the "Nyheter" button in products only pops up for products that are less than or equal to seven days old. 
+
+DEFINE JAVASCRIPT
+
+I have a standard ejs project. So my javascript files are database > init.js, routes > index.js, users.js and views > app.js

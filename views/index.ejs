@@ -95,7 +95,9 @@
                   id="product__card--image-back"
                 > 
               </div>
-              <button class="product__card--icons" id="nyheter">Nyheter</button>
+              <% if (product.age_days <= 7) { %>
+                <button class="product__card--icons nyheter">Nyheter</button>
+              <% } %>
               <img src="/icons/heart.svg" alt="heart icon no fill" class="product__card--icons" id="heart__icon--nofill">
               <div class="product__card--info">
                 <div class="product__card--info--header">
