@@ -79,22 +79,23 @@
       </section>
       <section class="products">
           <% products.forEach(product => { %>
-          <div class="product__card">
-            <div class="product__card--wrapper">
-              <div class="product__card--image-container">
-                <img 
-                  src="<%= product.picture_front %>" 
-                  alt="<%= product.name %>" 
-                  class="product__card--image"
-                  id="product__card--image-front"
-                >
-                <img 
-                  src="<%= product.picture_back %>"
-                  alt="<%= product.type %>"
-                  class="product__card--image"
-                  id="product__card--image-back"
-                > 
-              </div>
+          <a href = "/products/<%= product.id %>" class = "product__link"> 
+            <div class="product__card">
+              <div class="product__card--wrapper">
+                <div class="product__card--image-container">
+                  <img 
+                    src="<%= product.picture_front %>" 
+                    alt="<%= product.name %>" 
+                    class="product__card--image"
+                    id="product__card--image-front"
+                  >
+                  <img 
+                    src="<%= product.picture_back %>"
+                    alt="<%= product.type %>"
+                    class="product__card--image"
+                    id="product__card--image-back"
+                  > 
+                </div> <!-- /product__card--image-container -->
               <% if (product.age_days <= 7) { %>
                 <button class="product__card--icons nyheter">Nyheter</button>
               <% } %>
@@ -108,6 +109,7 @@
               </div> <!-- /product__card--wrapper -->
             </div>
           </div> <!-- /product__card -->
+          </a> <!-- /product__link -->
           <% }) %>   
         </section>
       </div>

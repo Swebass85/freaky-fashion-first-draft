@@ -25,4 +25,31 @@ router.get("/", function (req, res, next) {
   );
 });
 
+router.get("/products/:id", function (req, res, next) {
+  const productId = req.params.id;
+
+  db.get(
+    `
+    SELECT *
+    FROM products
+    WHERE id = ?
+    `,
+    [productId],
+    (err, product) => {
+      if (err) {
+        return next(err);
+      }
+
+      if (!product) {
+        return res.status(404).send("Product not found");
+      }
+
+      res.render("product", {
+        title: product.type,
+        product: product,
+      });
+    },
+  );
+});
+
 module.exports = router;
