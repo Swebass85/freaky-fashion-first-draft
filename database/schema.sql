@@ -7,3 +7,4 @@ CREATE TABLE products (
   picture_back TEXT,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
