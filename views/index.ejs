@@ -16,11 +16,17 @@
         
         <div class="header__top">
           
-          <form class="header__search">
+          <form class="header__search" action="/search" method="GET">
             
-            <input type="text" placeholder="Sök produkt" class="search__bar">
+            <input 
+              type="text" 
+              placeholder="Sök produkt" 
+              class="search__bar"
+              name="q"
+              >
           
           </form>
+          <h1>Search results for "<%= searchQuery %>"</h1>
           
           
           <div class="header__icons">
@@ -41,7 +47,7 @@
           </nav>
     </header>
 
-    <div class="main">
+    <main class="main">
       <section class="hero">
         <video class="hero__video" autoplay muted loop playsinline>
           <source src="/images/hero-video.mp4" type="video/mp4">
@@ -59,80 +65,89 @@
       </section>
       <section class="spots">
         <div class="spots__card">
-          <img src="\images\women\spots-women.webp" class="spots__card--image">
+          <img 
+            src="/images/women/spots-women.webp" 
+            class="spots__card--image"
+            alt="Womens fashion image"
+          >
           <div class="spots__card--overlay">
-            <h1>Women</h1>
+            <h1>Dam</h1>
           </div>
         </div>
         <div class="spots__card">
-          <img src="\images\Men\spots-men.webp" class="spots__card--image">
+          <img 
+            src="/images/Men/spots-men.webp" 
+            class="spots__card--image"
+            alt="Mens fashion image"
+          >
           <div class="spots__card--overlay">
-            <h1>Men</h1>
+            <h1>Herr</h1>
           </div>
         </div>
         <div class="spots__card">
-          <img src="\images\kids\spots-kids.webp" class="spots__card--image">
+          <img 
+            src="/images/kids/spots-kids.webp" 
+            class="spots__card--image"
+            alt="Kids fashion image"
+          >
           <div class="spots__card--overlay">
-            <h1>Kids</h1>
+            <h1>Barn</h1>
           </div>
         </div>
       </section>
       <section class="products">
-          <% products.forEach(product => { %>
+        <% products.forEach(product => { %>
+        <div class="product__card">
           <a href = "/products/<%= product.id %>" class = "product__link"> 
-            <div class="product__card">
-              <div class="product__card--wrapper">
-                <div class="product__card--image-container">
-                  <img 
-                    src="<%= product.picture_front %>" 
-                    alt="<%= product.name %>" 
-                    class="product__card--image"
-                    id="product__card--image-front"
-                  >
-                  <img 
-                    src="<%= product.picture_back %>"
-                    alt="<%= product.type %>"
-                    class="product__card--image"
-                    id="product__card--image-back"
-                  > 
-                </div> <!-- /product__card--image-container -->
+            <div class="product__card--wrapper">
+              <div class="product__card--image-container">
+                <img 
+                  src="<%= product.picture_front %>" 
+                  alt="<%= product.type %>" 
+                  class="product__card--image product__card--image-front"
+                >
+                <img 
+                  src="<%= product.picture_back %>"
+                  alt="<%= product.type %>"
+                  class="product__card--image product__card--image-back"
+                > 
+              </div> <!-- /product__card--image-container -->
               <% if (product.age_days <= 7) { %>
-                <button class="product__card--icons nyheter">Nyheter</button>
+              <button class="product__card--icons nyheter">Nyheter</button>
               <% } %>
-              <img src="/icons/heart.svg" alt="heart icon no fill" class="product__card--icons" id="heart__icon--nofill">
+              <img src="/icons/heart.svg" alt="heart icon no fill" class="product__card--icons heart__icon--nofill">
               <div class="product__card--info">
                 <div class="product__card--info--header">
                   <h3><%= product.type %></h3>
                   <p><%= product.price %> SEK</p>
                 </div> <!-- /product__card--info--header -->
                 <p><%= product.brand %></p>
-              </div> <!-- /product__card--wrapper -->
-            </div>
-          </div> <!-- /product__card -->
+              </div> <!-- /product__card--info -->
+            </div> <!-- /product__card--wrapper -->
           </a> <!-- /product__link -->
-          <% }) %>   
-        </section>
-      </div>
-      <!-- FEATURE BANNER (icons row) -->
+        </div> <!-- /product__card -->
+        <% }) %>   
+      </section>
+     
       <ul class="services-items">
         <li>
-          <img src="icons/globe.svg" alt="Free shipping icon" />
+          <img src="/icons/globe.svg" alt="Free shipping icon" />
           Gratis frakt och returer
         </li>
         <li>
-          <img src="icons/airplane.svg" alt="Express delivery icon" />
+          <img src="/icons/airplane.svg" alt="Express delivery icon" />
           Expressfrakt
         </li>
         <li>
-          <img src="icons/shield.svg" alt="Safe payments icon" />
+          <img src="/icons/shield.svg" alt="Safe payments icon" />
           Säkra betalningar
         </li>
         <li>
-          <img src="icons/smile-emoji.svg" alt="News every day icon" />
+          <img src="/icons/smile-emoji.svg" alt="News every day icon" />
           Nyheter varje dag
         </li>
       </ul>
-    </main>
+    </main> <!-- /main -->
 
     <footer>
       <!-- ACCORDION (shopping, my pages, customer service) -->
@@ -178,13 +193,14 @@
                 <li><a href="#">Kontakta oss</a></li>
                 <li><a href="#">Storleksguide</a></li>
               </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+            </div> <!-- /accordion-content -->
+          </div> <!-- /accordion-item -->
+        </div> <!-- /accordion-container -->
+      </div> <!-- /accordion -->
 
-    <footer>
-      <p>&copy; 2024 Freaky Fashion. All rights reserved.</p>
+      <div class="copyright">
+        <p>&copy; 2024 Freaky Fashion. All rights reserved.</p>
+      </div>
     </footer>
   </body>
 </html>

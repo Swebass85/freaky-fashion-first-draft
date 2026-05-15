@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Freaky Fashion</title>
+    <link rel="icon" href="icons/favicon-16px.png" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="site__header">
+        <img 
+          src="/images/logo-mobile.webp" 
+          alt="Freaky Fashion Logo" 
+          id="header__logotyp" 
+          />
+        <div class="header__top">
+          <form class="header__search">
+            <input 
+              type="text" 
+              placeholder="Sök produkt" 
+              class="search__bar"
+            >
+          </form>
+          <div class="header__icons">
+            <img 
+              src="/icons/heart-fill.svg" 
+              alt="heart icon" 
+              class="nav__icons" 
+              id="heart__icon"
+            >
+            <img 
+              src="/icons/shopping-basket.svg" 
+              alt="shopping cart icon" 
+              class="nav__icons" 
+              id="shopping__icon"
+            >
+            <img 
+              src="/icons/log-in.svg" 
+              alt="login icon" 
+              class="nav__icons" 
+              id="login__icon"
+            >
+          </div> <!-- /header__icons -->
+        </div> <!-- /header__top -->
+      </div> <!-- /site-header -->
+      <nav class="header__nav">
+        <ul>
+          <li><a href="/Nyheter">Nyheter</a></li>
+          <li><a href="/products">Kläder</a></li>
+          <li><a href="/about">Accessoarer</a></li>
+          <li><a href="/contact">Skor</a></li>
+          <li><a href="/">Startsida</a></li>
+        </ul>
+      </nav>
+    </header>
+    <section class="product__page">
+      <a href="/products/<%= product.id %>">
+        <img 
+          src="<%= product.picture_front %>" 
+          alt="Picture of <%= product.type %>"
+          class="product__page--image"
+        >
+      </a>   
+      <div class="product__page--info">
+        <div class="product__page--header">  
+          <h1><%= product.type %></h1>
+          <h2><%= product.brand %></h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Maecenas facilisis sapien et ligula convallis faucibus. Etiam
+            suscipit rhoncus sodales. Nunc et porttitor turpis, elementum
+            finibus tortor. In hac habitasse platea dictumst.
+          </p>
+          <h3><%= product.price %> SEK</h3>
+        <button class="product__page--add-to-cart">Lägg i varukorg</button>
+      </div> <!-- /product__page--header -->
+    </div> <!-- /product__page--info -->
+  </section> <!-- /product__page -->
+  <div class="carousel__wrapper">
+    <input type="radio" name="slider" id="slide1" checked>
+    <input type="radio" name="slider" id="slide2">
+    <div class="carousel">
+      <h1>Liknande produkter</h1>
+      <div class="carousel-track">
+        <% relatedProducts.forEach(product => { %>
+        <div class="carousel-item">
+          <div class="card">
+            <a href="/products/<%= product.id %>">
+                <div class="product__page--image-wrapper">
+        
+              <img 
+                src="<%= product.picture_front %>" 
+                alt="<%= product.type %>">
+              </div> <!-- /product__page--image-wrapper -->
+            </a>
+            <div class="card-categories">
+              <h2><%= product.type %></h2>
+              <h3><%= product.price %> SEK</h3>
+              <p><%= product.brand %></p>
+            </div> <!-- /card-categories -->
+          </div> <!-- /card -->
+        </div> <!-- /carousel-item -->
+        <% }) %>
+      </div> <!-- /carousel-track -->   
+      <label for="slide1" class="carousel__nav prev">‹</label>
+      <label for="slide2" class="carousel__nav next">›</label>
+    </div> <!-- /carousel -->
+  </div> <!-- /carousel-wrapper -->
+
+      
+      
+      
+      
+      
+        <ul class="services-items">
+          <li>
+            <img src="\icons\globe.svg" alt="Free shipping icon" />
+            Gratis frakt och returer
+          </li>
+          <li>
+            <img src="\icons\airplane.svg" alt="Express delivery icon" />
+            Expressfrakt
+          </li>
+          <li>
+            <img src="\icons\shield.svg" alt="Safe payments icon" />
+            Säkra betalningar
+          </li>
+          <li>
+            <img src="\icons\smile-emoji.svg" alt="News every day icon" />
+            Nyheter varje dag
+          </li>
+        </ul>
+      
+              
+              <footer>
+                
+                
+                <div class="accordion">
+                  <div class="accordion-container">
+                    
+                    <div class="accordion-item">
+                      <input type="checkbox" id="item-1" />
+                      <label for="item-1" class="accordion-header">Shopping</label>
+                      <div class="accordion-content">
+                        <ul>
+                          <li><a href="#">Vinterjackor</a></li>
+                          <li><a href="#">Pufferjackor</a></li>
+                          <li><a href="#">Kappa</a></li>
+                          <li><a href="#">Trenchcoats</a></li>
+                        </ul>
+                      </div>
+                    </div>
+            
+            
+                    <div class="accordion-item">
+                      <input type="checkbox" id="item-2" aria-label="Visa Mina Sidor" />
+                      <label for="item-2" class="accordion-header">Mina Sidor</label>
+                      <div class="accordion-content">
+                        <ul>
+                          <li><a href="#">Orderhistorik</a></li>
+                          <li><a href="#">Adressbok</a></li>
+                          <li><a href="#">Sparade kort</a></li>
+                          <li><a href="#">Personuppgifter</a></li>
+                        </ul>
+                      </div>
+                    </div>
+            
+              
+                    <div class="accordion-item">
+                      <input type="checkbox" id="item-3" aria-label="Visa kundtjänst" />
+                      <label for="item-3" class="accordion-header">Kundtjänst</label>
+                      <div class="accordion-content">
+                        <ul>
+                          <li><a href="#">Vanliga frågor</a></li>
+                          <li><a href="#">Retur & reklamation</a></li>
+                          <li><a href="#">Kontakta oss</a></li>
+                          <li><a href="#">Storleksguide</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p>© Freaky Fashion 2026</p>
+          </footer>
+        </body>
+    </html>
+    <!--  
