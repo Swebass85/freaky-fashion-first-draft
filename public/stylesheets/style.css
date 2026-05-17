@@ -168,6 +168,16 @@ nav ul {
   transition: filter 0.3s ease;
 }
 
+#heart__icon, #shopping__icon, #login__icon{
+   filter: invert(18%) sepia(88%) saturate(7483%) hue-rotate(293deg);
+   transition: filter 0.3s ease;
+   cursor: pointer;
+}
+
+#heart__icon:hover, #shopping__icon:hover, #login__icon:hover{
+filter: invert(24%) sepia(98%) saturate(8200%)
+        hue-rotate(305deg) brightness(125%) contrast(115%);
+}
 .product__card--wrapper:hover .heart__icon--nofill {
   filter: invert(18%) sepia(88%) saturate(7483%) hue-rotate(293deg);
 }
