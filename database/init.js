@@ -7,3 +7,4 @@ const db = new Database(
 const schema = fs.readFileSync(path.join(__dirname, "schema.sql"), "utf-8");
 db.exec(schema);
 console.log("✅ Database initialized successfully");
+

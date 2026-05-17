@@ -15,3 +15,25 @@ I want to make sure that the "Nyheter" button in products only pops up for produ
 DEFINE JAVASCRIPT
 
 I have a standard ejs project. So my javascript files are database > init.js, routes > index.js, users.js and views > app.js
+
+DEFINE project
+
+I have created an express.js project with a database that I call freakyfashion.db with the following table:
+
+CREATE TABLE products (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  type TEXT NOT NULL,
+  brand TEXT NOT NULL,
+  price REAL NOT NULL,
+  picture_front TEXT,
+  picture_back TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+I have an .sql file called schema.sql. I am using sqlite3 for this project. 
+
+So my javascript files are database > init.js, routes > index.js, users.js and views > app.js
+
+LOGIN function
+
+I want to create a login function, when the user clicks login__icon I wan them to be directed to a login page, we create a new route for this page. 
