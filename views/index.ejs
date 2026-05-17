@@ -30,9 +30,30 @@
           
           
           <div class="header__icons">
-            <img src="/icons/heart-fill.svg" alt="heart icon" class="nav__icons" id="heart__icon">
-            <img src="/icons/shopping-basket.svg" alt="shopping cart icon" class="nav__icons" id="shopping__icon">
-            <img src="/icons/log-in.svg" alt="login icon" class="nav__icons" id="login__icon">
+          <a href="/favorites" class="add-to-favorites">
+            <img 
+              src="/icons/heart-fill.svg" 
+              alt="heart icon" 
+              class="nav__icons" id="heart__icon"
+            >
+          </a>
+            
+            <a href="/cart" class="cart">
+              <img 
+              src="/icons/shopping-basket.svg" 
+              alt="shopping cart icon" 
+              class="nav__icons" id="shopping__icon"
+              >
+            </a>
+            
+            <a href="/login">
+              <img 
+                src="/icons/log-in.svg" 
+                alt="login icon" 
+                class="nav__icons" 
+                id="login__icon"
+              >
+            </a>
           </div> <!-- /header__icons -->
         </div> <!-- /header__top -->
       </div> <!-- /site-header -->
@@ -113,9 +134,22 @@
                 > 
               </div> <!-- /product__card--image-container -->
               <% if (product.age_days <= 7) { %>
-              <button class="product__card--icons nyheter">Nyheter</button>
+              <button class="nyheter">Nyheter</button>
               <% } %>
-              <img src="/icons/heart.svg" alt="heart icon no fill" class="product__card--icons heart__icon--nofill">
+              <div class="product__card--icons-wrapper">
+                <img 
+                  src="/icons/shopping-basket.svg" 
+                  alt="shopping cart icon" 
+                  class="product__card--icons"
+                  id="product__card--basket"
+                >
+                <img 
+                  src="/icons/heart.svg" 
+                  alt="heart icon no fill" 
+                  class=" product__card--icons"
+                  id = "product__card--heart"
+                >
+              </div>
               <div class="product__card--info">
                 <div class="product__card--info--header">
                   <h3><%= product.type %></h3>

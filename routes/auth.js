@@ -6,6 +6,7 @@ const path = require("path");
 
 const db = new Database(path.join(__dirname, "../database/freaky-fashion.db"));
 
+
 // show login page
 router.get("/login", (req, res) => {
   res.render("login");
@@ -13,22 +14,23 @@ router.get("/login", (req, res) => {
 
 // register user
 router.post("/register", (req, res) => {
-  const { email, password } = req.body;
+  const { first_name, last_name, email, password, birthday } = req.body;
 
   const hashedPassword = bcrypt.hashSync(password, 10);
 
   try {
-    db.prepare(
-      "INSERT INTO users (email, password) VALUES (?, ?)"
-    ).run(email, hashedPassword);
+    db.prepare(`
+      INSERT INTO users (first_name, last_name, email, password, birthday)
+      VALUES (?, ?, ?, ?, ?)
+    `).run(first_name, last_name, email, hashedPassword, birthday || null);
 
     res.redirect("/login");
   } catch (err) {
-    res.send("User already exists");
+    console.log(err);
+    res.send("User already exists or invalid data");
   }
 });
 
-// login user
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
 
@@ -36,13 +38,22 @@ router.post("/login", (req, res) => {
     .prepare("SELECT * FROM users WHERE email = ?")
     .get(email);
 
-  if (!user) return res.send("User not found");
+  if (!user) {
+    return res.send("User not found");
+  }
 
   const valid = bcrypt.compareSync(password, user.password);
 
-  if (!valid) return res.send("Wrong password");
+  if (!valid) {
+    return res.send("Wrong password");
+  }
 
-  res.send("Logged in!");
+  // save session
+  req.session.userId = user.id;
+  req.session.userEmail = user.email;
+
+  // redirect after login
+  res.redirect("/");
 });
 
 module.exports = router;
