@@ -11,9 +11,9 @@ var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth');
 
 var app = express();
-
 // DB
 const db = new Database(path.join(__dirname, "./database/freaky-fashion.db"));
+db.pragma("foreign_keys = ON");
 const requireAuth = require("./middleware/requireAuth");
 
 // view engine setup
@@ -70,6 +70,23 @@ app.use((req, res, next) => {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/', authRouter);
+
+app.post("/favorites", requireAuth, (req, res) => {
+  const userId = req.session.userId;
+  const { productId } = req.body;
+
+  try {
+    db.prepare(`
+      INSERT INTO favorites (user_id, product_id)
+      VALUES (?, ?)
+    `).run(userId, productId);
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Could not add favorite" });
+  }
+});
 
 // 404
 app.use(function(req, res, next) {

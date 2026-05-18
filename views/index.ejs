@@ -150,26 +150,25 @@
               <% if (product.age_days <= 7) { %>
               <button class="nyheter">Nyheter</button>
               <% } %>
-              <div class="product__card--icons-wrapper">
-                <img 
-                  src="/icons/shopping-basket.svg" 
-                  alt="shopping cart icon" 
-                  class="product__card--icons"
-                  id="product__card--basket"
-                >
-                <img 
-                  src="/icons/heart.svg" 
-                  alt="heart icon no fill" 
-                  class=" product__card--icons"
-                  id = "product__card--heart"
-                >
-              </div>
               <div class="product__card--info">
                 <div class="product__card--info--header">
                   <h3><%= product.type %></h3>
-                  <p><%= product.price %> SEK</p>
+                  <p><%= product.brand %></p>
                 </div> <!-- /product__card--info--header -->
-                <p><%= product.brand %></p>
+                <div class="product__card--icons-wrapper">
+                  <p><%= product.price %> SEK</p>
+                  <div class="product__card--icons">
+                    <div class="icon-toggle icon-toggle--basket">
+  <img src="/icons/shopping-basket.svg" class="icon-toggle__empty" alt="basket">
+  <img src="/icons/shopping-basket-thick.svg" class="icon-toggle__fill" alt="basket thick">
+</div>
+                    <div class="icon-toggle icon-toggle--heart">
+  <img src="/icons/heart.svg" class="icon-toggle__empty" alt="heart">
+  <img src="/icons/heart-fill.svg" class="icon-toggle__fill" alt="heart filled">
+</div>
+                  </div>
+                </div>
+
               </div> <!-- /product__card--info -->
             </div> <!-- /product__card--wrapper -->
           </a> <!-- /product__link -->
