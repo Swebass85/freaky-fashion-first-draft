@@ -29,32 +29,45 @@
           
           
           
-          <div class="header__icons">
-          <a href="/favorites" class="add-to-favorites">
-            <img 
-              src="/icons/heart-fill.svg" 
-              alt="heart icon" 
-              class="nav__icons" id="heart__icon"
-            >
-          </a>
-            
-            <a href="/cart" class="cart">
-              <img 
-              src="/icons/shopping-basket.svg" 
-              alt="shopping cart icon" 
-              class="nav__icons" id="shopping__icon"
-              >
-            </a>
-            
-            <a href="/login">
-              <img 
-                src="/icons/log-in.svg" 
-                alt="login icon" 
-                class="nav__icons" 
-                id="login__icon"
-              >
-            </a>
-          </div> <!-- /header__icons -->
+<div class="header__icons">
+
+  <% if (locals.user) { %>
+
+    <h3>Hej <%= locals.user.first_name %></h3>
+
+    <a href="/logout">Logout</a>
+
+  <% } else { %>
+
+    <a href="/login">
+      <img 
+        src="/icons/log-in.svg"
+        alt="login icon"
+        class="nav__icons"
+      >
+    </a>
+
+  <% } %>
+
+  <a href="/favorites" class="add-to-favorites">
+    <img 
+      src="/icons/heart-fill.svg" 
+      alt="heart icon" 
+      class="nav__icons"
+      id="heart__icon"
+    >
+  </a>
+
+  <a href="/cart" class="cart">
+    <img 
+      src="/icons/shopping-basket.svg" 
+      alt="shopping cart icon" 
+      class="nav__icons"
+      id="shopping__icon"
+    >
+  </a>
+
+</div>
         </div> <!-- /header__top -->
       </div> <!-- /site-header -->
         

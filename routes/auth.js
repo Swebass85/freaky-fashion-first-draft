@@ -6,7 +6,6 @@ const path = require("path");
 
 const db = new Database(path.join(__dirname, "../database/freaky-fashion.db"));
 
-
 // show login page
 router.get("/login", (req, res) => {
   res.render("login");
@@ -25,12 +24,14 @@ router.post("/register", (req, res) => {
     `).run(first_name, last_name, email, hashedPassword, birthday || null);
 
     res.redirect("/login");
+
   } catch (err) {
     console.log(err);
     res.send("User already exists or invalid data");
   }
 });
 
+// login
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
 
@@ -54,6 +55,17 @@ router.post("/login", (req, res) => {
 
   // redirect after login
   res.redirect("/");
+});
+
+// logout
+router.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.send("Could not log out");
+    }
+
+    res.redirect("/");
+  });
 });
 
 module.exports = router;

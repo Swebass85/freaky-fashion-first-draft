@@ -3,24 +3,71 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login - Freaky Fashion</title>
-    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <title>Freaky Fashion</title>
+    <link rel="icon" href="icons/favicon-16px.png" />
+    <link rel="stylesheet" href="stylesheets/style.css" />
   </head>
-
-  <body class="auth-page">
-
+  <body class="login-page">
+    
     <header>
-      <div class="site__header">
-        <img src="/images/logo-mobile.webp" id="header__logotyp" alt="Freaky Fashion" />
-      </div>
+      
+      <div class="login__site--header">
+        <img src="/images/logo-mobile.webp" alt="Freaky Fashion Logo" id="header__logotyp" />
+        
+        
+          
+            <div class="login__header--items">
+                <h1>Welcome back</h1>
+                 <p class="auth__subtitle">Log in or create an account</p>
+            </div>
+          
+          
+          <div class="header__icons">
+          <a href="/favorites" class="add-to-favorites">
+            <img 
+              src="/icons/heart-fill.svg" 
+              alt="heart icon" 
+              class="nav__icons" id="heart__icon"
+            >
+          </a>
+            
+            <a href="/cart" class="cart">
+              <img 
+              src="/icons/shopping-basket.svg" 
+              alt="shopping cart icon" 
+              class="nav__icons" id="shopping__icon"
+              >
+            </a>
+            
+            <a href="/login">
+              <img 
+                src="/icons/log-in.svg" 
+                alt="login icon" 
+                class="nav__icons" 
+                id="login__icon"
+              >
+            </a>
+          </div> <!-- /header__icons -->
+        </div> <!-- /header__top -->
+      </div> <!-- /site-header -->
+        
+        <nav class="header__nav">
+          <ul>
+            <li><a href="/Nyheter">Nyheter</a></li>
+            <li><a href="/products">Kläder</a></li>
+            <li><a href="/about">Accessoarer</a></li>
+            <li><a href="/contact">Skor</a></li>
+            <li><a href="/contact">Mitt konto</a></li>
+            <li><a href="/">Startsida</a></li>
+            </ul>
+          </nav>
     </header>
 
     <main class="auth">
 
       <div class="auth__container">
 
-        <h1>Welcome back</h1>
-        <p class="auth__subtitle">Log in or create an account</p>
+       
 
         <!-- LOGIN -->
         <form 
@@ -32,11 +79,11 @@
 
           <input name="email" type="email" placeholder="Email" required />
           <input name="password" type="password" placeholder="Password" required />
-
           <button type="submit">Login</button>
-            <a href="/" class="guest-button">Continue as guest</a>
+          <a href="/" class="guest-button">Continue as guest</a>
         </form>
-
+        
+        <p>or</p>
         
 
         <!-- REGISTER -->
@@ -53,6 +100,12 @@
         </form>
 
       </div>
+      <section class="login__hero">
+        <video class="login__hero--video" autoplay muted loop playsinline>
+          <source src="/images/hero-video.mp4" type="video/mp4">
+        </video>
+        
+      </section>
 
     </main>
 
