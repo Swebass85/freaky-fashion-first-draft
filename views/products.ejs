@@ -6,43 +6,96 @@
     <title>Freaky Fashion</title>
     <link rel="icon" href="icons/favicon-16px.png" />
     <link rel="stylesheet" href="/stylesheets/style.css" />
+     <script defer src="/javascripts/search.js"></script>
+     <script defer src="/javascripts/favorites.js"></script>
+    <script defer src="/javascripts/basket.js"></script>
   </head>
   <body>
     <header>
+      
       <div class="site__header">
-        <img 
-          src="/images/logo-mobile.webp" 
-          alt="Freaky Fashion Logo" 
-          id="header__logotyp" 
-          />
-        <div class="header__top">
-          <form class="header__search">
-            <input 
-              type="text" 
-              placeholder="Sök produkt" 
-              class="search__bar"
-            >
-          </form>
-          <div class="header__icons">
-            <img 
-              src="/icons/heart-fill.svg" 
-              alt="heart icon" 
-              class="nav__icons" 
-              id="heart__icon"
-            >
-            <img 
-              src="/icons/shopping-basket.svg" 
-              alt="shopping cart icon" 
-              class="nav__icons" 
-              id="shopping__icon"
-            >
-            <img 
-              src="/icons/log-in.svg" 
-              alt="login icon" 
-              class="nav__icons" 
-              id="login__icon"
-            >
-          </div> <!-- /header__icons -->
+        <img src="/images/logo-mobile.webp" alt="Freaky Fashion Logo" id="header__logotyp" />
+        
+<div class="header__top">
+
+  <form class="header__search">
+
+    <input
+      type="text"
+      id="searchInput"
+      name="q"
+      class="search__bar"
+      placeholder="Sök produkt"
+      autocomplete="off"
+    />
+
+    <div id="searchResults"></div>
+
+  </form>
+
+
+
+
+          
+          
+          
+          
+<div class="header__icons">
+
+  
+  
+  <a href="/favorites" class="favorites-header">
+
+  <img 
+    src="/icons/heart-fill.svg" 
+    alt="heart icon" 
+    class="nav__icons nav__icons--favorites-size"
+    id="heart__icon"
+  >
+
+  <span class="icon-count" id="favorites-count">
+    <%= session?.favoritesCount || session?.favorites?.length || 0 %>
+  </span>
+
+</a>
+
+<a href="/basket" class="basket-header">
+
+  <img 
+    src="/icons/shopping-basket-thick.svg"
+    class="nav__icons nav__icons--basket-size"
+    alt="basket"
+    id="basket-icon"
+  >
+
+  <span class="icon-count" id="basket-count">
+    <%= session?.basketCount || session?.basket?.length || 0 %>
+  </span>
+
+</a>
+<% if (locals.user) { %>
+
+ <a href="/logout">
+    <img 
+      src="/icons/log-out.svg"
+      alt="login icon"
+      class="nav__icons"
+    >
+  </a>
+
+<% } else { %>
+
+  <a href="/login">
+    <img 
+      src="/icons/log-in.svg"
+      alt="login icon"
+      class="nav__icons"
+    >
+  </a>
+
+<% } %>
+
+</div>
         </div> <!-- /header__top -->
       </div> <!-- /site-header -->
       <nav class="header__nav">
@@ -57,28 +110,78 @@
       </nav>
     </header>
     <section class="product__page">
-      <a href="/products/<%= product.id %>">
-        <img 
-          src="<%= product.picture_front %>" 
-          alt="Picture of <%= product.type %>"
-          class="product__page--image"
-        >
-      </a>   
-      <div class="product__page--info">
-        <div class="product__page--header">  
-          <h1><%= product.type %></h1>
-          <h2><%= product.brand %></h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Maecenas facilisis sapien et ligula convallis faucibus. Etiam
-            suscipit rhoncus sodales. Nunc et porttitor turpis, elementum
-            finibus tortor. In hac habitasse platea dictumst.
-          </p>
+
+  <a href="/products/<%= product.id %>">
+    <img 
+      src="<%= product.picture_front %>" 
+      alt="Picture of <%= product.type %>"
+      class="product__page--image"
+    >
+  </a>
+
+  <div class="product__page--info">
+
+    <div class="product__page--header">
+
+      <h1><%= product.type %></h1>
+      <h2><%= product.brand %></h2>
+
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      </p>
+
+      <div class="product__page--purchase-box">
+
+        <div class="product__page--purchase-header">
+          <h3>Pris</h3>
           <h3><%= product.price %> SEK</h3>
-        <button class="product__page--add-to-cart">Lägg i varukorg</button>
-      </div> <!-- /product__page--header -->
-    </div> <!-- /product__page--info -->
-  </section> <!-- /product__page -->
+        </div>
+
+        <div class="product__page--purchase-row">
+
+          <label for="quantity">Antal</label>
+
+          <select 
+            id="quantity"
+            name="quantity"
+            class="product__page--quantity"
+          >
+            <option value="1">1 st</option>
+            <option value="2">2 st</option>
+            <option value="3">3 st</option>
+            <option value="4">4 st</option>
+            <option value="5">5 st</option>
+          </select>
+
+        </div>
+
+        <div class="product__page--button-wrapper">
+
+          <button 
+            class="product__page--add-to-cart add-to-cart-btn"
+            data-product-id="<%= product.id %>"
+            type="button"
+          >
+            Lägg i varukorg
+          </button>
+
+          <button 
+            class="product__page--add-to-favorites add-to-favorites-btn"
+            data-product-id="<%= product.id %>"
+            type="button"
+          >
+            Lägg till i favoriter
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
   <div class="carousel__wrapper">
     <input type="radio" name="slider" id="slide1" checked>
     <input type="radio" name="slider" id="slide2">

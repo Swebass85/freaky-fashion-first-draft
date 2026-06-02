@@ -13,6 +13,9 @@ body {
   line-height: 1.5;
   font-family: system-ui, sans-serif;
   user-select: none;
+  min-height:100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
@@ -39,6 +42,13 @@ footer {
 li a:hover {
   color: magenta;
 }
+
+button{
+  padding: 0.8rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
 
 .site__header {
   display: flex;
@@ -68,6 +78,30 @@ li a:hover {
   gap: 1rem;
 }
 
+.nav__icons--basket-wrapper{
+  position: relative;
+  width: 2rem;
+}
+
+.nav__icons--basket-wrapper:hover .nav__icons-basket-thick{
+opacity:unset;
+}
+
+.nav__icons--basket{
+  position: absolute;
+  transition: opacity 0.3s ease;
+}
+
+.nav__icons-basket-thick{
+  position: absolute;
+  opacity: 0;
+}
+
+#basket-icon{
+  position: relative;
+  top: 2px;
+}
+
 .nav__icons {
   width: 2rem;
 }
@@ -88,6 +122,119 @@ nav ul {
 
 .search__bar:hover {
   border-color: magenta;
+}
+
+.header__search {
+  position: relative;
+}
+
+.header__icons {
+  display: flex;
+  gap: 1rem;
+}
+
+
+
+#searchResults {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: white;
+ 
+  z-index: 1000;
+}
+
+.search-result {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  text-decoration: none;
+  color: black;
+  border-bottom: 1px solid #eee;
+}
+
+.search-result--active {
+  background: #f5f5f5;
+}
+
+.search-result--active h4,
+.search-result--active p {
+  color: magenta;
+}
+
+.search-result:hover {
+  background: #f5f5f5;
+}
+
+.search-result__image {
+  width: 60px;
+  height: 80px;
+  object-fit: cover;
+}
+
+.search-result--active {
+  background: #f0f0f0;
+}
+
+.favorites-header {
+  position: relative;
+  display: inline-block;
+}
+
+
+
+.icon-count {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  
+  width: 18px;
+  height: 18px;
+
+  border-radius: 50%;
+
+  background: rgb(247, 30, 182);
+  color: white;
+
+  font-size: 12px;
+  font-weight: bold;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.basket-header {
+  position: relative;
+  display: inline-block;
+}
+
+.favorites-header,
+.basket-header {
+  position: relative;
+  display: inline-block;
+}
+
+.favorites-header img,
+.basket-header img {
+  position: relative;
+  z-index: 2;
+}
+
+.icon-count {
+  z-index: 1;
+}
+
+.nav__icons {
+  filter: invert(18%) sepia(88%) saturate(7483%) hue-rotate(293deg);
+  transition: filter 0.3s ease;
+  width: 2rem;
+}
+
+.nav__icons:hover {
+  filter: invert(24%) sepia(98%) saturate(8200%) hue-rotate(305deg)
+    brightness(125%) contrast(115%);
 }
 
 .main > * {
@@ -157,12 +304,14 @@ nav ul {
   width: 24px;
   height: 24px;
   cursor: pointer;
+  border: none;
 }
 
 /* stack both images on top of each other */
 .icon-toggle img {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   transition: opacity 0.2s ease;
@@ -174,9 +323,26 @@ nav ul {
   z-index: 2;
 }
 
-/* hover reveals fill version */
 .icon-toggle:hover .icon-toggle__fill {
   opacity: 1;
+}
+
+.icon-toggle__empty {
+  opacity: 1;
+}
+
+.icon-toggle.active .icon-toggle__empty {
+  opacity: 0;
+}
+
+.icon-toggle.active .icon-toggle__fill {
+  opacity: 1;
+}
+
+.favorite-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 .product__card--icons{
@@ -328,12 +494,30 @@ nav ul {
   object-fit: cover;
 }
 
+.product__page--button-wrapper{
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding:4px;
+  height: 5rem;
+}
+
 .product__page--add-to-cart {
   padding: 1rem;
   background-color: black;
   color: white;
   border: none;
   cursor: pointer;
+  width:9rem;
+}
+
+.product__page--add-to-favorites {
+  padding: 1rem;
+  background-color: magenta;
+  color: white;
+  border: none;
+  cursor: pointer;
+  width: 9rem;
 }
 
 input[type="radio"] {
@@ -341,7 +525,11 @@ input[type="radio"] {
 }
 
 .product__page--add-to-cart:hover {
-  background-color: magenta;
+  border: 3px solid magenta;
+}
+
+.product__page--add-to-favorites:hover {
+  border: 3px solid black;
 }
 
 .product__page--header {
@@ -453,9 +641,132 @@ input[type="radio"] {
   overflow: idden;;
 }
 
+.favorites__main{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/*-------------CHECKOUT------------*/
+
+.empty__shopping-basket{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap:2rem;
+  min-width: 100%;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+
+
+
+.basket-empty-img{
+  object-fit: cover;
+  
+}
+
+.checkout__main{
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 70vh;
+}
+
+.checkout__hero{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 100rem;
+  
+}
+
+.product__page--checkout-items{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.product__page--checkout-wrapper{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+
+
+.product__page--purchase-box{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+
+
+.checkout__image{
+  width: 20rem;
+  height: 20rem;
+  object-fit: cover;;
+}
+
+
+
+.product__page--purchase-box .product__card--image-front{
+  height: 10rem;
+  width: 10rem;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+.product__page--trash {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.trash-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.trash-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.checkout__page--payment{
+  
+
+  min-width: 300px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  position: sticky;
+  top: 2rem;
+}
+
+.checkout__page--payment-items{
+  display: flex;
+  gap:7rem;
+}
+
+
+
 @media (min-width: 640px) {
   .products {
     grid-template-columns: repeat(2, 1fr);
+    width:100%;
+
   }
 
   .site__header {
@@ -626,10 +937,6 @@ input[type="radio"] {
   }
 }
 @media (min-width: 1024px) {
-  .header__icons {
-    display: flex;
-    gap: 1rem;
-  }
 
   .hero {
     display: flex;

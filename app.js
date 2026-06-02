@@ -1,45 +1,42 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var session = require('express-session');
+const createError = require("http-errors");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
+const session = require("express-session");
 const Database = require("better-sqlite3");
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var authRouter = require('./routes/auth');
+const indexRouter = require("./routes/index");
+const usersRouter = require("./routes/users");
+const authRouter = require("./routes/auth");
+const checkoutRouter = require("./routes/checkout");
 
-var app = express();
-// DB
+const app = express();
+
 const db = new Database(path.join(__dirname, "./database/freaky-fashion.db"));
 db.pragma("foreign_keys = ON");
-const requireAuth = require("./middleware/requireAuth");
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
 
-// middleware
-app.use(logger('dev'));
+app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use(session({
-  secret: 'freaky-fashion-secret',
+  secret: "freaky-fashion-secret",
   resave: false,
   saveUninitialized: false
 }));
 
-app.use(express.static(path.join(__dirname, 'public')));
-
-// 🔥 TEST ROUTE (MUST BE AFTER app is created)
-app.get("/test", (req, res) => {
-  res.send("OK SERVER IS RUNNING");
+app.use((req, res, next) => {
+  res.locals.session = req.session;
+  next();
 });
 
-// user middleware
+app.use(express.static(path.join(__dirname, "public")));
+
 app.use((req, res, next) => {
   try {
     const userId = req.session.userId;
@@ -66,37 +63,19 @@ app.use((req, res, next) => {
   }
 });
 
-// routes
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/', authRouter);
+app.use("/", indexRouter(db));
+app.use("/users", usersRouter(db));
+app.use("/", authRouter(db));
+app.use("/", checkoutRouter(db));
 
-app.post("/favorites", requireAuth, (req, res) => {
-  const userId = req.session.userId;
-  const { productId } = req.body;
-
-  try {
-    db.prepare(`
-      INSERT INTO favorites (user_id, product_id)
-      VALUES (?, ?)
-    `).run(userId, productId);
-
-    res.json({ success: true });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Could not add favorite" });
-  }
-});
-
-// 404
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   next(createError(404));
 });
 
-// error handler
 app.use((err, req, res, next) => {
   console.error("🔥 ERROR:", err);
-  res.status(500).send(err.stack);
+  res.status(err.status || 500);
+  res.send(err.stack);
 });
 
 module.exports = app;

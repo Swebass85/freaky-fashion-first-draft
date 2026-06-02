@@ -23,16 +23,38 @@ CREATE TABLE IF NOT EXISTS favorites (
   user_id INTEGER NOT NULL,
   product_id INTEGER NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+  UNIQUE(user_id, product_id),
+
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS cart_items (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_id INTEGER NOT NULL,
+
+  user_id INTEGER,
+  session_id TEXT,
+
   product_id INTEGER NOT NULL,
   quantity INTEGER DEFAULT 1,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+  FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+
+  CHECK (
+    user_id IS NOT NULL OR session_id IS NOT NULL
+  )
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS unique_user_cart_item
+ON cart_items(user_id, product_id)
+WHERE user_id IS NOT NULL;
+
+CREATE UNIQUE INDEX IF NOT EXISTS unique_session_cart_item
+ON cart_items(session_id, product_id)
+WHERE session_id IS NOT NULL;
+
+CREATE UNIQUE INDEX IF NOT EXISTS unique_user_favorite
+ON favorites(user_id, product_id);

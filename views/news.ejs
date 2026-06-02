@@ -102,20 +102,18 @@
         
         <nav class="header__nav">
           <ul>
-            <li><a href="/news">Nyheter</a></li>
+            <li><a href="/favorites">Favoriter</a></li>
             <li><a href="/products">Kläder</a></li>
             <li><a href="/about">Accessoarer</a></li>
             <li><a href="/contact">Skor</a></li>
             <li><a href="/contact">Mitt konto</a></li>
+            <li><a href="/">Startsida</a></li>
             </ul>
           </nav>
     </header>
 
     <main class="main">
-      <section class="hero">
-        <video class="hero__video" autoplay muted loop playsinline>
-          <source src="/images/hero-video.mp4" type="video/mp4">
-        </video>
+      <section class="favorites_hero">
         <div class="hero__info">
           <h1>Freaky Fashion</h1>
           <p>Välkommen till sommarens hetaste look!</p>
@@ -126,114 +124,66 @@
   <h1>Freaky Fashion</h1>
 <% } %>
              <% if (locals.user) { %>
-    <h2 class="hero__username">
+    <h3 class="hero__username">
       Hej <%= locals.user.first_name %>
-    </h2>
+    </h3>
   <% } %>
-            <p>Välkommen till sommarens hetaste look!</p>
+            <h2>Här har vi samlat de senaste nyheterna</h2>
           </div>
         </div><!-- /hero__info--1024-wrapper -->
       </section>
-      <section class="spots">
-        <div class="spots__card">
-          <img 
-            src="/images/women/spots-women.webp" 
-            class="spots__card--image"
-            alt="Womens fashion image"
-          >
-          <div class="spots__card--overlay">
-            <h1>Dam</h1>
-          </div>
-        </div>
-        <div class="spots__card">
-          <img 
-            src="/images/Men/spots-men.webp" 
-            class="spots__card--image"
-            alt="Mens fashion image"
-          >
-          <div class="spots__card--overlay">
-            <h1>Herr</h1>
-          </div>
-        </div>
-        <div class="spots__card">
-          <img 
-            src="/images/kids/spots-kids.webp" 
-            class="spots__card--image"
-            alt="Kids fashion image"
-          >
-          <div class="spots__card--overlay">
-            <h1>Barn</h1>
-          </div>
-        </div>
-      </section>
+      
       <section class="products">
         <% products.forEach(product => { %>
-       <div class="product__card">
+        <div class="product__card">
+          <a href = "/products/<%= product.id %>" class = "product__link"> 
+            <div class="product__card--wrapper">
+              <div class="product__card--image-container">
+                <img 
+                  src="<%= product.picture_front %>" 
+                  alt="<%= product.type %>" 
+                  class="product__card--image product__card--image-front"
+                >
+                <img 
+                  src="<%= product.picture_back %>"
+                  alt="<%= product.type %>"
+                  class="product__card--image product__card--image-back"
+                > 
+              </div> <!-- /product__card--image-container -->
+              <% if (product.age_days <= 7) { %>
+              <button class="nyheter">Nyheter</button>
+              <% } %>
+              <div class="product__card--info">
+                <div class="product__card--info--header">
+                  <h3><%= product.type %></h3>
+                  <p><%= product.brand %></p>
+                </div> <!-- /product__card--info--header -->
+                <div class="product__card--icons-wrapper">
+                  <p><%= product.price %> SEK</p>
+                  <div class="product__card--icons">
+                    <button 
+  class="icon-toggle icon-toggle--basket basket-btn"
+  data-product-id="<%= product.id %>"
+  type="button"
+>
+  <img src="/icons/shopping-basket.svg" class="icon-toggle__empty" alt="basket">
+  <img src="/icons/shopping-basket-thick.svg" class="icon-toggle__fill" alt="basket filled">
+</button>
+                    <button 
+  class="icon-toggle icon-toggle--heart favorite-btn"
+  data-product-id="<%= product.id %>"
+  type="button"
+>
+  <img src="/icons/heart.svg" class="icon-toggle__empty" alt="heart">
+  <img src="/icons/heart-fill.svg" class="icon-toggle__fill" alt="heart filled">
+</button>
+                  </div>
+                </div>
 
-  <div class="product__card--wrapper">
-
-    <a href="/products/<%= product.id %>" class="product__link">
-
-      <div class="product__card--image-container">
-        <img 
-          src="<%= product.picture_front %>" 
-          alt="<%= product.type %>" 
-          class="product__card--image product__card--image-front"
-        >
-
-        <img 
-          src="<%= product.picture_back %>"
-          alt="<%= product.type %>"
-          class="product__card--image product__card--image-back"
-        > 
-      </div>
-
-    </a>
-
-    <% if (product.age_days <= 7) { %>
-      <button class="nyheter">Nyheter</button>
-    <% } %>
-
-    <div class="product__card--info">
-
-      <div class="product__card--info--header">
-        <h3><%= product.type %></h3>
-        <p><%= product.brand %></p>
-      </div>
-
-      <div class="product__card--icons-wrapper">
-
-        <p><%= product.price %> SEK</p>
-
-        <div class="product__card--icons">
-
-          <button 
-  class="icon-toggle icon-toggle--basket basket-btn <%= session?.basket?.includes(product.id) ? 'active' : '' %>"
-            data-product-id="<%= product.id %>"
-            type="button"
-          >
-            <img src="/icons/shopping-basket.svg" class="icon-toggle__empty" alt="basket">
-            <img src="/icons/shopping-basket-thick.svg" class="icon-toggle__fill" alt="basket filled">
-          </button>
-
-          <button 
-            class="icon-toggle icon-toggle--heart favorite-btn <%= product.isFavorite ? 'active' : '' %>"
-            data-product-id="<%= product.id %>"
-            type="button"
-          >
-            <img src="/icons/heart.svg" class="icon-toggle__empty" alt="heart">
-            <img src="/icons/heart-fill.svg" class="icon-toggle__fill" alt="heart filled">
-          </button>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
+              </div> <!-- /product__card--info -->
+            </div> <!-- /product__card--wrapper -->
+          </a> <!-- /product__link -->
+        </div> <!-- /product__card -->
         <% }) %>   
       </section>
      
