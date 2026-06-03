@@ -3,6 +3,13 @@ const router = express.Router();
 const Fuse = require("fuse.js");
 
 module.exports = (db) => {
+  function requireAdmin(req, res, next) {
+  if (!req.session.userId || !req.session.isAdmin) {
+    return res.status(403).send("Access denied");
+  }
+
+  next();
+}
   router.get("/", (req, res, next) => {
     try {
       const userId = req.session.userId;
@@ -222,22 +229,41 @@ module.exports = (db) => {
   });
 
   router.get("/news", (req, res, next) => {
-    try {
-      const products = db.prepare(`
-        SELECT *,
-        julianday('now') - julianday(created_at) AS age_days
-        FROM products
-        WHERE julianday('now') - julianday(created_at) <= 7
-      `).all();
+  try {
+    const products = db.prepare(`
+      SELECT *,
+      julianday('now') - julianday(created_at) AS age_days
+      FROM products
+      WHERE julianday('now') - julianday(created_at) <= 7
+    `).all();
 
-      res.render("news", {
-        title: "Nyheter",
-        products
-      });
-    } catch (err) {
-      next(err);
-    }
-  });
+    res.render("news", {
+      title: "Nyheter",
+      products
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/administration", requireAdmin, (req, res, next) => {
+  try {
+    const products = db.prepare(`
+      SELECT *
+      FROM products
+      ORDER BY id DESC
+    `).all();
+
+    res.render("administration", {
+      title: "Administration",
+      products
+    });
+  } catch (err) {
+    next(err);
+  }
+});
 
   return router;
+
+    return router;
 };

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <title>Administration</title>
+</head>
+<body>
+    <header class="admin__header">
+         <div class="site__header">
+        <h1>Administration</h1>
+    </header>
+    <section class="admin__main">
+    <div class="admin__kategorier">
+        <h3>Produkter</h3>
+        <h3>Kategorier</h3>
+    </div>
+    <div class="produkter">
+        <table class="admin__table">
+          <thead>
+            <tr class="layer1">
+              <th>Namn</th>
+              <th>SKU</th>
+              <th>Pris</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+  <% products.forEach(product => { %>
+    <tr>
+      <td class="Namn"><%= product.type %></td>
+      <td class="SKU"><%= product.SKU %></td>
+      <td class="Pris"><%= product.price %> kr</td>
+
+      <td class="icons">
+  <span class="penna">
+    <a href="/administration/products/<%= product.id %>/edit">
+      <img src="/icons/square-pen.svg" alt="Redigera produkt">
+    </a>
+  </span>
+
+  <form
+    action="/administration/products/<%= product.id %>/delete"
+    method="POST"
+    class="admin__delete-form"
+  >
+    <button type="submit" class="admin__icon-button">
+      <img src="/icons/trash.svg" alt="Ta bort produkt">
+    </button>
+  </form>
+</td>
+    </tr>
+  <% }) %>
+</tbody>
+        </table>
+        <a href="/administration/products/new" class="admin__button">
+  Lägg till produkt
+</a>
+    </div>
+    </section>
+
+</body>
+</html>

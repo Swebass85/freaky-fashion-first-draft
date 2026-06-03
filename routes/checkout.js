@@ -9,7 +9,9 @@ module.exports = (db) => {
       const userId = req.session.userId;
 
       if (!productId) {
-        return res.status(400).json({ success: false, error: "Invalid product id" });
+        return res
+          .status(400)
+          .json({ success: false, error: "Invalid product id" });
       }
 
       if (!userId) {
@@ -30,28 +32,34 @@ module.exports = (db) => {
 
         return res.json({
           success: true,
-          count: req.session.basketCount
+          count: req.session.basketCount,
         });
       }
 
-      db.prepare(`
+      db.prepare(
+        `
         INSERT INTO cart_items (user_id, product_id, quantity)
         VALUES (?, ?, 1)
         ON CONFLICT(user_id, product_id)
         DO UPDATE SET quantity = quantity + 1
-      `).run(userId, productId);
+      `,
+      ).run(userId, productId);
 
-      const basketCount = db.prepare(`
+      const basketCount = db
+        .prepare(
+          `
         SELECT COALESCE(SUM(quantity), 0) AS count
         FROM cart_items
         WHERE user_id = ?
-      `).get(userId).count;
+      `,
+        )
+        .get(userId).count;
 
       req.session.basketCount = basketCount;
 
       res.json({
         success: true,
-        count: basketCount
+        count: basketCount,
       });
     } catch (err) {
       next(err);
@@ -64,18 +72,22 @@ module.exports = (db) => {
       const userId = req.session.userId;
 
       if (userId) {
-        const products = db.prepare(`
+        const products = db
+          .prepare(
+            `
           SELECT products.*,
           cart_items.quantity,
           julianday('now') - julianday(products.created_at) AS age_days
           FROM cart_items
           JOIN products ON products.id = cart_items.product_id
           WHERE cart_items.user_id = ?
-        `).all(userId);
+        `,
+          )
+          .all(userId);
 
         return res.render("basket", {
           title: "Varukorg",
-          products
+          products,
         });
       }
 
@@ -85,25 +97,30 @@ module.exports = (db) => {
       if (basketIds.length === 0) {
         return res.render("basket", {
           title: "Varukorg",
-          products: []
+          products: [],
         });
       }
 
       const placeholders = basketIds.map(() => "?").join(",");
 
-      const products = db.prepare(`
+      const products = db
+        .prepare(
+          `
         SELECT *,
         julianday('now') - julianday(created_at) AS age_days
         FROM products
         WHERE id IN (${placeholders})
-      `).all(...basketIds).map((product) => ({
-        ...product,
-        quantity: quantities[product.id] || 1
-      }));
+      `,
+        )
+        .all(...basketIds)
+        .map((product) => ({
+          ...product,
+          quantity: quantities[product.id] || 1,
+        }));
 
       res.render("basket", {
         title: "Varukorg",
-        products
+        products,
       });
     } catch (err) {
       next(err);
@@ -120,23 +137,29 @@ module.exports = (db) => {
       if (!productId || !quantity || quantity < 1) {
         return res.status(400).json({
           success: false,
-          error: "Invalid product or quantity"
+          error: "Invalid product or quantity",
         });
       }
 
       if (userId) {
-        db.prepare(`
+        db.prepare(
+          `
           UPDATE cart_items
           SET quantity = ?
           WHERE user_id = ?
           AND product_id = ?
-        `).run(quantity, userId, productId);
+        `,
+        ).run(quantity, userId, productId);
 
-        const basketCount = db.prepare(`
+        const basketCount = db
+          .prepare(
+            `
           SELECT COALESCE(SUM(quantity), 0) AS count
           FROM cart_items
           WHERE user_id = ?
-        `).get(userId).count;
+        `,
+          )
+          .get(userId).count;
 
         req.session.basketCount = basketCount;
       } else {
@@ -161,7 +184,88 @@ module.exports = (db) => {
 
       res.json({
         success: true,
-        count: req.session.basketCount
+        count: req.session.basketCount,
+      });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  router.post("/basket/remove/:id", (req, res, next) => {
+    try {
+      const productId = Number(req.params.id);
+      const userId = req.session.userId;
+
+      if (userId) {
+        const item = db
+          .prepare(
+            `
+        SELECT quantity
+        FROM cart_items
+        WHERE user_id = ?
+        AND product_id = ?
+      `,
+          )
+          .get(userId, productId);
+
+        if (item) {
+          if (item.quantity > 1) {
+            db.prepare(
+              `
+            UPDATE cart_items
+            SET quantity = quantity - 1
+            WHERE user_id = ?
+            AND product_id = ?
+          `,
+            ).run(userId, productId);
+          } else {
+            db.prepare(
+              `
+            DELETE FROM cart_items
+            WHERE user_id = ?
+            AND product_id = ?
+          `,
+            ).run(userId, productId);
+          }
+        }
+
+        const basketCount = db
+          .prepare(
+            `
+        SELECT COALESCE(SUM(quantity), 0) AS count
+        FROM cart_items
+        WHERE user_id = ?
+      `,
+          )
+          .get(userId).count;
+
+        req.session.basketCount = basketCount;
+      } else {
+        if (!req.session.quantities) {
+          req.session.quantities = {};
+        }
+
+        const currentQty = req.session.quantities[productId] || 1;
+
+        if (currentQty > 1) {
+          req.session.quantities[productId] = currentQty - 1;
+        } else {
+          req.session.basket = (req.session.basket || []).filter(
+            (id) => id !== productId,
+          );
+
+          delete req.session.quantities[productId];
+        }
+
+        req.session.basketCount = Object.values(req.session.quantities).reduce(
+          (sum, qty) => sum + qty,
+          0,
+        );
+      }
+
+      res.json({
+        success: true,
+        count: req.session.basketCount,
       });
     } catch (err) {
       next(err);
@@ -170,52 +274,3 @@ module.exports = (db) => {
 
   return router;
 };
-
-router.post("/basket/remove/:id", (req, res, next) => {
-  try {
-
-    const productId =
-      Number(req.params.id);
-
-    const userId =
-      req.session.userId;
-
-    if (userId) {
-
-      db.prepare(`
-        DELETE FROM cart_items
-        WHERE user_id = ?
-        AND product_id = ?
-      `).run(userId, productId);
-
-      const basketCount = db.prepare(`
-        SELECT COALESCE(SUM(quantity), 0) AS count
-        FROM cart_items
-        WHERE user_id = ?
-      `).get(userId).count;
-
-      req.session.basketCount =
-        basketCount;
-
-    } else {
-
-      req.session.basket =
-        (req.session.basket || [])
-          .filter(id => id !== productId);
-
-      delete req.session.quantities?.[productId];
-
-      req.session.basketCount =
-        req.session.basket.length;
-
-    }
-
-    res.json({
-      success: true,
-      count: req.session.basketCount
-    });
-
-  } catch (err) {
-    next(err);
-  }
-});

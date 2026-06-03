@@ -10,6 +10,7 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const authRouter = require("./routes/auth");
 const checkoutRouter = require("./routes/checkout");
+const administrationRouter = require("./routes/administration");
 
 const app = express();
 
@@ -48,7 +49,7 @@ app.use((req, res, next) => {
     }
 
     const user = db
-      .prepare("SELECT id, first_name, email FROM users WHERE id = ?")
+      .prepare("SELECT id, first_name, email, administrator FROM users WHERE id = ?")
       .get(userId);
 
     res.locals.user = user || null;
@@ -67,6 +68,7 @@ app.use("/", indexRouter(db));
 app.use("/users", usersRouter(db));
 app.use("/", authRouter(db));
 app.use("/", checkoutRouter(db));
+app.use("/", administrationRouter(db));
 
 app.use((req, res, next) => {
   next(createError(404));

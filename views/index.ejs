@@ -107,6 +107,11 @@
             <li><a href="/about">Accessoarer</a></li>
             <li><a href="/contact">Skor</a></li>
             <li><a href="/contact">Mitt konto</a></li>
+            <% if (session?.isAdmin) { %>
+            <li>
+              <a href="/administration">Administration</a>
+            </li>
+            <% } %>
             </ul>
           </nav>
     </header>

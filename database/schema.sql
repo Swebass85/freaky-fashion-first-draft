@@ -5,7 +5,9 @@ CREATE TABLE IF NOT EXISTS products (
   price REAL NOT NULL,
   picture_front TEXT,
   picture_back TEXT,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  sku TEXT,
+  description TEXT
 );
 
 CREATE TABLE IF NOT EXISTS users (
@@ -15,6 +17,7 @@ CREATE TABLE IF NOT EXISTS users (
   email TEXT NOT NULL UNIQUE,
   password TEXT NOT NULL,
   birthday DATE,
+  administrator INTEGER NOT NULL DEFAULT 0,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -58,3 +61,4 @@ WHERE session_id IS NOT NULL;
 
 CREATE UNIQUE INDEX IF NOT EXISTS unique_user_favorite
 ON favorites(user_id, product_id);
+

@@ -51,6 +51,9 @@ module.exports = (db) => {
 
       req.session.userId = user.id;
       req.session.userEmail = user.email;
+      req.session.isAdmin = Number(user.administrator) === 1;
+      console.log("administrator from db:", user.administrator);
+      console.log("isAdmin in session:", req.session.isAdmin);
 
       const guestFavorites = req.session.favorites || [];
 

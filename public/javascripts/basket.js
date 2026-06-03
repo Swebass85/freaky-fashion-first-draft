@@ -11,28 +11,23 @@ function setupAddToBasketButtons() {
 
   basketButtons.forEach((button) => {
     button.addEventListener("click", async () => {
-
       const productId = button.dataset.productId;
 
       const response = await fetch(`/basket/${productId}`, {
-        method: "POST"
+        method: "POST",
       });
 
       const data = await response.json();
 
       if (data.success) {
-
         button.classList.toggle("active");
 
-        const basketCount =
-          document.querySelector("#basket-count");
+        const basketCount = document.querySelector("#basket-count");
 
         if (basketCount) {
           basketCount.textContent = data.count;
         }
-
       }
-
     });
   });
 }
@@ -55,13 +50,23 @@ function setupQuantitySelectors() {
 
       updateOrderValue();
 
-      await fetch(`/basket/update/${productId}`, {
+      const response = await fetch(`/basket/update/${productId}`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ quantity })
+        body: JSON.stringify({ quantity }),
       });
+
+      const data = await response.json();
+
+      if (data.success) {
+        const basketCount = document.querySelector("#basket-count");
+
+        if (basketCount) {
+          basketCount.textContent = data.count;
+        }
+      }
     });
   });
 }
@@ -73,10 +78,7 @@ function updateOrderValue() {
     orderValue += Number(price.textContent.replace(" SEK", ""));
   });
 
-  const deliveryFee =
-    orderValue > 0 && orderValue < 500
-      ? 49
-      : 0;
+  const deliveryFee = orderValue > 0 && orderValue < 500 ? 49 : 0;
 
   const total = orderValue + deliveryFee;
 
@@ -101,80 +103,81 @@ function updateOrderValue() {
 }
 
 function setupTrashButtons() {
-
-  const trashButtons =
-    document.querySelectorAll(".trash-btn");
+  const trashButtons = document.querySelectorAll(".trash-btn");
 
   trashButtons.forEach((button) => {
-
     button.addEventListener("click", async () => {
+      const productId = button.dataset.productId;
 
-      const productId =
-        button.dataset.productId;
-
-      const response = await fetch(
-        `/basket/remove/${productId}`,
-        {
-          method: "POST"
-        }
-      );
+      const response = await fetch(`/basket/remove/${productId}`, {
+        method: "POST",
+      });
 
       const data = await response.json();
 
       if (data.success) {
+        const productBox = button.closest(".product__page--purchase-box");
 
-        const productBox =
-          button.closest(".product__page--purchase-box");
+        const quantitySelect = productBox.querySelector(
+          ".product__page--quantity",
+        );
 
-        productBox.remove();
+        const priceElement = productBox.querySelector(".product-price");
+        const basePrice = Number(priceElement.dataset.price);
 
-const remainingProducts = document.querySelectorAll(
-  ".product__page--purchase-box"
-);
+        const currentQuantity = Number(quantitySelect.value);
 
-if (remainingProducts.length === 0) {
-  const checkoutPayment = document.querySelector(".checkout__page--payment");
-  const checkoutWrapper = document.querySelector(".product__page--checkout-wrapper");
+        if (currentQuantity > 1) {
+          const newQuantity = currentQuantity - 1;
 
-  if (checkoutPayment) {
-    checkoutPayment.remove();
-  }
+          quantitySelect.value = newQuantity;
+          priceElement.textContent = `${basePrice * newQuantity} SEK`;
+        } else {
+          productBox.remove();
+        }
 
-    if (checkoutWrapper) {
-    checkoutWrapper.innerHTML = `
-      <div class="empty__shopping-basket">
-        <p class="basket-empty-message">
-          Din varukorg är tom
-        </p>
-
-        <img
-          src="/images/tom_varukorg.png"
-          class="basket-empty-img"
-          alt="empty shopping basket"
-        >
-      </div>
-    `;
-  }
-
-
-  return;
-}
-
-
-
-        updateOrderValue();
-
-        const basketCount =
-          document.querySelector("#basket-count");
+        const basketCount = document.querySelector("#basket-count");
 
         if (basketCount) {
           basketCount.textContent = data.count;
         }
 
+        updateOrderValue();
+
+        const remainingProducts = document.querySelectorAll(
+          ".product__page--purchase-box",
+        );
+
+        if (remainingProducts.length === 0) {
+          const checkoutPayment = document.querySelector(
+            ".checkout__page--payment",
+          );
+
+          const checkoutWrapper = document.querySelector(
+            ".product__page--checkout-wrapper",
+          );
+
+          if (checkoutPayment) {
+            checkoutPayment.remove();
+          }
+
+          if (checkoutWrapper) {
+            checkoutWrapper.innerHTML = `
+              <div class="empty__shopping-basket">
+                <p class="basket-empty-message">
+                  Din varukorg är tom
+                </p>
+
+                <img
+                  src="/images/tom_varukorg.png"
+                  class="basket-empty-img"
+                  alt="empty shopping basket"
+                >
+              </div>
+            `;
+          }
+        }
       }
-
     });
-
   });
-
 }

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "server": "nodemon ./bin/www",
-    "client": "browser-sync start --proxy \"http://localhost:3000\" --files \"public/**/*, views/**/*\"",
+    "client": "browser-sync start --proxy \"http://localhost:3000\" --port 3001 --ui-port 3002 --files \"public/**/*, views/**/*\" --browser chrome",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "dependencies": {
@@ -17,6 +17,7 @@
     "fuse.js": "^7.3.0",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
+    "multer": "^2.1.1",
     "sqlite3": "^6.0.1"
   },
   "devDependencies": {

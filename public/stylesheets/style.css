@@ -43,10 +43,30 @@ li a:hover {
   color: magenta;
 }
 
-button{
-  padding: 0.8rem;
+button,
+.admin__button,
+.product__page--add-to-cart,
+.product__page--add-to-favorites,
+.guest-button {
+  padding: 0.8rem 1.2rem;
+  border: none;
   cursor: pointer;
   transition: 0.2s;
+  background: black;
+  color: white;
+  font-size: 1rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button:hover,
+.admin__button:hover,
+.product__page--add-to-cart:hover,
+.guest-button:hover {
+  background: magenta;
+  color: white;
 }
 
 
@@ -648,6 +668,30 @@ input[type="radio"] {
   align-items: center;
 }
 
+/*-------------FAVORITES------------*/
+.favorites__main .products {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.favorites__main .products {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.favorites__main .product__card {
+  width: 320px;
+  flex: 0 0 320px;
+}
+
+.favorites__main .product__card--image-container {
+  min-height: 24rem;
+}
+
 /*-------------CHECKOUT------------*/
 
 .empty__shopping-basket{
@@ -936,6 +980,148 @@ input[type="radio"] {
     right: 0;
   }
 }
+
+/*----------------Administration-----------------*/
+
+.admin__header .site__header{
+  height: 4rem;
+  background-color: darkblue;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding-left: 1rem;
+}
+
+.admin__main {
+  display: flex;
+}
+
+.admin__kategorier {
+  background-color: #504f4f;
+  width: 15rem;
+  color: white;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 1.8rem;
+}
+
+.produkter {
+  flex: 1;
+  padding: 2rem;
+}
+
+.admin__table {
+  width: 50%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.admin__table th,
+.admin__table td {
+  padding: 1rem;
+  text-align: left;
+}
+
+/* Namn */
+.admin__table th:nth-child(1),
+.admin__table td:nth-child(1) {
+  width: 50%;
+}
+
+/* SKU */
+.admin__table th:nth-child(2),
+.admin__table td:nth-child(2) {
+  width: 25%;
+}
+
+/* Pris */
+.admin__table th:nth-child(3),
+.admin__table td:nth-child(3) {
+  width: 10%;
+}
+
+/* Ikoner */
+.admin__table th:nth-child(4),
+.admin__table td:nth-child(4) {
+  width: 5%;
+}
+
+.icons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.icons img {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.admin__header{
+  margin: 0;
+}
+
+.admin__forms {
+  flex: 1;
+  padding: 2rem;
+}
+
+.admin__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  max-width: 45rem;
+}
+
+.admin__form input {
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+}
+
+.admin__edit-images {
+  display: flex;
+  gap: 2rem;
+  margin: 1rem 0;
+}
+
+.admin__edit-image-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.admin__preview-img {
+  width: 8rem;
+  height: 8rem;
+  object-fit: cover;
+  display: block;
+  border: 1px solid #ccc;
+}
+
+.admin__button {
+  width: fit-content;
+}
+
+.admin__delete-form {
+  margin: 0;
+}
+
+.admin__icon-button img,
+.penna img {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.admin__icon-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+
 @media (min-width: 1024px) {
 
   .hero {
