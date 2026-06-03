@@ -1,6 +1,7 @@
 const createError = require("http-errors");
 const express = require("express");
 const path = require("path");
+const fs = require("fs");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const session = require("express-session");
@@ -14,8 +15,29 @@ const administrationRouter = require("./routes/administration");
 
 const app = express();
 
-const db = new Database(path.join(__dirname, "./database/freaky-fashion.db"));
+/* DATABASE SETUP */
+const dbPath = path.join(__dirname, "database", "freaky-fashion.db");
+console.log("Using database:", dbPath);
+
+const db = new Database(dbPath);
 db.pragma("foreign_keys = ON");
+
+// Load and execute schema
+const schemaPath = path.join(__dirname, "database", "schema.sql");
+const schema = fs.readFileSync(schemaPath, "utf8");
+db.exec(schema);
+
+
+// Show existing tables in terminal
+const tables = db.prepare(`
+  SELECT name
+  FROM sqlite_master
+  WHERE type = 'table'
+  ORDER BY name
+`).all();
+
+console.log("Tables found:", tables);
+/* END DATABASE SETUP */
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -45,21 +67,34 @@ app.use((req, res, next) => {
     if (!userId) {
       res.locals.user = null;
       res.locals.isLoggedIn = false;
+      res.locals.isAdmin = false;
       return next();
     }
 
     const user = db
-      .prepare("SELECT id, first_name, email, administrator FROM users WHERE id = ?")
+      .prepare(
+        "SELECT id, first_name, email, administrator FROM users WHERE id = ?"
+      )
       .get(userId);
+
+    console.log("Current user:", user);
 
     res.locals.user = user || null;
     res.locals.isLoggedIn = !!user;
+    res.locals.isAdmin = user
+      ? Number(user.administrator) === 1
+      : false;
+
+    console.log("isAdmin local:", res.locals.isAdmin);
 
     next();
   } catch (err) {
     console.error("User middleware error:", err);
+
     res.locals.user = null;
     res.locals.isLoggedIn = false;
+    res.locals.isAdmin = false;
+
     next();
   }
 });

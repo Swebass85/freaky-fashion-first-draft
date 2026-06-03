@@ -69,17 +69,35 @@ module.exports = (db) => {
       const guestBasket = req.session.basket || [];
       const guestQuantities = req.session.quantities || {};
 
-      const insertCartItem = db.prepare(`
-        INSERT INTO cart_items (user_id, product_id, quantity)
-        VALUES (?, ?, ?)
-        ON CONFLICT(user_id, product_id)
-        DO UPDATE SET quantity = quantity + excluded.quantity
-      `);
+      const existingCartItem = db.prepare(`
+  SELECT id, quantity
+  FROM cart_items
+  WHERE user_id = ?
+  AND product_id = ?
+`);
+
+const insertCartItem = db.prepare(`
+  INSERT INTO cart_items (user_id, product_id, quantity)
+  VALUES (?, ?, ?)
+`);
+
+const updateCartItem = db.prepare(`
+  UPDATE cart_items
+  SET quantity = quantity + ?
+  WHERE user_id = ?
+  AND product_id = ?
+`);
 
       for (const productId of guestBasket) {
-        const quantity = Number(guestQuantities[productId] || 1);
-        insertCartItem.run(user.id, productId, quantity);
-      }
+  const quantity = Number(guestQuantities[productId] || 1);
+  const existing = existingCartItem.get(user.id, productId);
+
+  if (existing) {
+    updateCartItem.run(quantity, user.id, productId);
+  } else {
+    insertCartItem.run(user.id, productId, quantity);
+  }
+}
 
       req.session.favorites = [];
       req.session.basket = [];

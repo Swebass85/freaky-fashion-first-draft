@@ -19,7 +19,7 @@ module.exports = (db) => {
         products = db.prepare(`
           SELECT products.*,
           julianday('now') - julianday(products.created_at) AS age_days,
-          CASE WHEN favorites.id IS NOT NULL THEN 1 ELSE 0 END AS isFavorite
+          CASE WHEN favorites.product_id IS NOT NULL THEN 1 ELSE 0 END AS isFavorite
           FROM products
           LEFT JOIN favorites
           ON favorites.product_id = products.id
@@ -263,7 +263,7 @@ router.get("/administration", requireAdmin, (req, res, next) => {
   }
 });
 
-  return router;
+  
 
     return router;
 };

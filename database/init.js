@@ -7,4 +7,11 @@ const db = new Database(
 const schema = fs.readFileSync(path.join(__dirname, "schema.sql"), "utf-8");
 db.exec(schema);
 console.log("✅ Database initialized successfully");
+const tables = db.prepare(`
+  SELECT name
+  FROM sqlite_master
+  WHERE type = 'table'
+`).all();
+
+console.log(tables);
 

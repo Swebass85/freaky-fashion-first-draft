@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/stylesheets/style.css">
-  <title>Edit products</title>
+  <title><%= title %></title>
 </head>
 
 <body>
@@ -16,23 +16,31 @@
 
   <main class="admin__main">
     <aside class="admin__kategorier">
-      <h3>Produkter</h3>
-      <h3>Kategorier</h3>
-    </aside>
+  <h3>
+    <a href="/administration">Produkter</a>
+  </h3>
+
+  <h3>Kategorier</h3>
+
+  <h3>
+    <a href="/">Startsida</a>
+  </h3>
+</aside>
 
     <section class="admin__forms">
-      <h2>Lägg till/Redigera produkt</h2>
+      <div class="admin__form-card">
+        <h2><%= isNew ? "Lägg till produkt" : "Redigera produkt" %></h2>
 
-      <form
-  class="admin__form"
-  action="<%= isNew ? '/administration/products/new' : '/administration/products/' + product.id + '/edit' %>"
-  method="POST"
-  enctype="multipart/form-data"
->
-        <label>Namn</label>
-        <input type="text" name="type" value="<%= product.type %>" required>
+        <form
+          class="admin__form"
+          action="<%= isNew ? '/administration/products/new' : '/administration/products/' + product.id + '/edit' %>"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <label>Namn</label>
+          <input type="text" name="type" value="<%= product.type || '' %>" required>
 
-        <label>Beskrivning</label>
+          <label>Beskrivning</label>
           <input
             type="text"
             name="description"
@@ -41,57 +49,71 @@
             required
           >
 
+          <label>Bild</label>
+          <div class="admin__edit-images">
+            <div class="admin__edit-image-group">
+              <span>Frontbild</span>
 
-        <label>Brand</label>
-        <input type="text" name="brand" value="<%= product.brand %>" required>
+              <% if (product.picture_front) { %>
+                <img src="<%= product.picture_front %>" class="admin__preview-img" alt="Frontbild">
+              <% } %>
 
-        <label>SKU</label>
+              <input type="file" name="picture_front" accept="image/*">
+            </div>
+
+            <div class="admin__edit-image-group">
+              <span>Bakbild</span>
+
+              <% if (product.picture_back) { %>
+                <img src="<%= product.picture_back %>" class="admin__preview-img" alt="Bakbild">
+              <% } %>
+
+              <input type="file" name="picture_back" accept="image/*">
+            </div>
+          </div>
+
+          <label>Märke</label>
+          <input type="text" name="brand" value="<%= product.brand || '' %>" required>
+
+          <label>SKU</label>
+          <div class="admin__sku">
+            <input
+              type="text"
+              name="sku_letters"
+              maxlength="3"
+              pattern="[A-Z]{3}"
+              value="<%= product.sku ? product.sku.split(' ')[0] : '' %>"
+              placeholder="ABC"
+              required
+            >
+
+            <input
+              type="number"
+              name="sku_numbers"
+              min="1"
+              value="<%= product.sku ? product.sku.split(' ')[1] : '' %>"
+              placeholder="123"
+              required
+            >
+          </div>
+
+          <label>Pris</label>
+          <input type="number" name="price" value="<%= product.price || '' %>" required>
+
+          <label>Publiceringsdatum</label>
           <input
-            type="text"
-            name="sku"
-            value="<%= product.SKU || '' %>"
-            pattern="[A-Z]{3} [0-9]+"
-            title="SKU must follow format XXX YYY, for example ABC 123"
+            type="datetime-local"
+            name="created_at"
+            value="<%= product.created_at ? product.created_at.replace(' ', 'T').slice(0, 16) : '' %>"
             required
           >
 
-        <label>Pris</label>
-        <input type="number" name="price" value="<%= product.price %>" required>
-
-        <label>Publiceringsdatum</label>
-        <input
-          type="datetime-local"
-          name="created_at"
-          value="<%= product.created_at ? product.created_at.replace(' ', 'T').slice(0, 16) : '' %>"
-          required
-        >
-
-        <div class="admin__edit-images">
-  <div class="admin__edit-image-group">
-    <label>Frontbild</label>
-
-    <% if (product.picture_front) { %>
-      <img src="<%= product.picture_front %>" class="admin__preview-img" alt="Frontbild">
-    <% } %>
-
-    <input type="file" name="picture_front" accept="image/*">
-  </div>
-
-  <div class="admin__edit-image-group">
-    <label>Bakbild</label>
-
-    <% if (product.picture_back) { %>
-      <img src="<%= product.picture_back %>" class="admin__preview-img" alt="Bakbild">
-    <% } %>
-
-    <input type="file" name="picture_back" accept="image/*">
-  </div>
-</div>
-
-        <button type="submit" class="admin__button">
-          Spara ändringar
-        </button>
-      </form>
+          <div></div>
+          <button type="submit" class="admin__button">
+            <%= isNew ? "Lägg till" : "Spara ändringar" %>
+          </button>
+        </form>
+      </div>
     </section>
   </main>
 </body>
