@@ -1,0 +1,3 @@
+-- database: c:\Users\akerm\Desktop\Workspace\Backend\freaky-fashion-first-draft\database\freaky-fashion.db
+
+SELECT * FROM users;

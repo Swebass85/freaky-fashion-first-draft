@@ -64,6 +64,16 @@ CREATE TABLE IF NOT EXISTS cart_items (
   CHECK (user_id IS NOT NULL OR session_id IS NOT NULL)
 );
 
+CREATE TABLE IF NOT EXISTS categories (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE,
+  slug TEXT NOT NULL UNIQUE,
+  image TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
 CREATE UNIQUE INDEX IF NOT EXISTS unique_user_cart_item
 ON cart_items(user_id, product_id)
 WHERE user_id IS NOT NULL;

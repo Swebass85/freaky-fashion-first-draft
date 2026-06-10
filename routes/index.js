@@ -263,7 +263,15 @@ router.get("/administration", requireAdmin, (req, res, next) => {
   }
 });
 
+router.get("/categories", (req, res, next) => {
+  try {
+    res.render("categories", {
+      title: "Categories"
+    });
+  } catch (err) {
+    next(err);
+  }
+});  
   
-
     return router;
 };
