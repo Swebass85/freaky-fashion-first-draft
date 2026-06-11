@@ -1,43 +1,62 @@
-console.log("search.js loaded");
-
 const searchInput = document.querySelector("#searchInput");
 const searchResults = document.querySelector("#searchResults");
 
 let selectedIndex = -1;
 let debounceTimer;
 
-searchInput.addEventListener("input", (e) => {
-  const query = e.target.value.trim();
+if (searchInput && searchResults) {
+  searchInput.addEventListener("input", handleSearchInput);
+  document.addEventListener("keydown", handleKeyboardNavigation);
+  document.addEventListener("click", handleOutsideClick);
+}
 
-  console.log("User typed:", query);
+function handleSearchInput(event) {
+  const query = event.target.value.trim();
 
   clearTimeout(debounceTimer);
+  selectedIndex = -1;
 
   if (!query) {
-    searchResults.innerHTML = "";
+    clearSearchResults();
     return;
   }
 
-  debounceTimer = setTimeout(async () => {
+  debounceTimer = setTimeout(() => {
+    fetchSearchResults(query);
+  }, 500);
+}
 
-    console.log("SEARCH REQUEST SENT:", query);
+async function fetchSearchResults(query) {
+  try {
+    const response = await fetch(`/search?q=${encodeURIComponent(query)}`);
+    const products = await response.json();
 
+    renderSearchResults(products);
+  } catch (err) {
+    console.error("Search request failed:", err);
+    clearSearchResults();
+  }
+}
 
-    try {
-      console.time("Frontend search request");
-      const response = await fetch(
-        `/search?q=${encodeURIComponent(query)}`
-      );
+function renderSearchResults(products) {
+  if (!products.length) {
+    searchResults.innerHTML = `
+      <p class="search-result search-result--empty">
+        Inga produkter hittades
+      </p>
+    `;
+    return;
+  }
 
-      const products = await response.json();
-
-      console.timeEnd("Frontend search request");
-      console.log("RESULTS:", products);
-      
-
-      searchResults.innerHTML = products.map(product => `
+  searchResults.innerHTML = products
+    .map((product) => {
+      return `
         <a href="/products/${product.id}" class="search-result">
-          <img src="${product.picture_front}" class="search-result__image">
+          <img
+            src="${product.picture_front}"
+            class="search-result__image"
+            alt="${product.type}"
+          >
 
           <div>
             <h4>${product.type}</h4>
@@ -45,27 +64,25 @@ searchInput.addEventListener("input", (e) => {
             <p>${product.price} SEK</p>
           </div>
         </a>
-      `).join("");
+      `;
+    })
+    .join("");
+}
 
-    } catch (err) {
-      console.error(err);
-    }
+function handleKeyboardNavigation(event) {
+  const items = searchResults.querySelectorAll(".search-result:not(.search-result--empty)");
 
-  }, 500);
-});
-
-document.addEventListener("keydown", (e) => {
-  const items = searchResults.querySelectorAll(".search-result");
-
-  if (e.key !== "ArrowDown" && e.key !== "ArrowUp" && e.key !== "Enter") {
+  if (!["ArrowDown", "ArrowUp", "Enter"].includes(event.key)) {
     return;
   }
 
-  if (!items.length) return;
+  if (!items.length) {
+    return;
+  }
 
-  e.preventDefault();
+  event.preventDefault();
 
-  if (e.key === "ArrowDown") {
+  if (event.key === "ArrowDown") {
     selectedIndex = selectedIndex + 1;
 
     if (selectedIndex >= items.length) {
@@ -75,7 +92,7 @@ document.addEventListener("keydown", (e) => {
     updateSelection(items);
   }
 
-  if (e.key === "ArrowUp") {
+  if (event.key === "ArrowUp") {
     selectedIndex = selectedIndex - 1;
 
     if (selectedIndex < 0) {
@@ -85,13 +102,13 @@ document.addEventListener("keydown", (e) => {
     updateSelection(items);
   }
 
-  if (e.key === "Enter" && selectedIndex >= 0) {
+  if (event.key === "Enter" && selectedIndex >= 0) {
     window.location.href = items[selectedIndex].href;
   }
-});
+}
 
 function updateSelection(items) {
-  items.forEach(item => {
+  items.forEach((item) => {
     item.classList.remove("search-result--active");
   });
 
@@ -102,13 +119,17 @@ function updateSelection(items) {
   }
 }
 
-document.addEventListener("click", (e) => {
+function handleOutsideClick(event) {
   const isInsideSearch =
-    searchInput.contains(e.target) ||
-    searchResults.contains(e.target);
+    searchInput.contains(event.target) ||
+    searchResults.contains(event.target);
 
   if (!isInsideSearch) {
-    searchResults.innerHTML = "";
-    selectedIndex = -1;
+    clearSearchResults();
   }
-});
+}
+
+function clearSearchResults() {
+  searchResults.innerHTML = "";
+  selectedIndex = -1;
+}

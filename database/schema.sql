@@ -13,6 +13,14 @@ CREATE TABLE IF NOT EXISTS users (
   CHECK (administrator IN (0, 1))
 );
 
+CREATE TABLE IF NOT EXISTS categories (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE,
+  slug TEXT NOT NULL UNIQUE,
+  image TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS products (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   type TEXT NOT NULL,
@@ -23,8 +31,13 @@ CREATE TABLE IF NOT EXISTS products (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   sku TEXT UNIQUE,
   description TEXT,
+  category_id INTEGER,
 
-  CHECK (price >= 0)
+  CHECK (price >= 0),
+
+  FOREIGN KEY (category_id)
+    REFERENCES categories(id)
+    ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS favorites (
@@ -64,15 +77,11 @@ CREATE TABLE IF NOT EXISTS cart_items (
   CHECK (user_id IS NOT NULL OR session_id IS NOT NULL)
 );
 
-CREATE TABLE IF NOT EXISTS categories (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL UNIQUE,
-  slug TEXT NOT NULL UNIQUE,
-  image TEXT,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-
+INSERT OR IGNORE INTO categories (name, slug, image)
+VALUES
+('Kläder', 'klader', '/images/categories/klader.webp'),
+('Accessoarer', 'accessoarer', '/images/categories/accessoarer.webp'),
+('Skor', 'skor', '/images/categories/skor.webp');
 
 CREATE UNIQUE INDEX IF NOT EXISTS unique_user_cart_item
 ON cart_items(user_id, product_id)
@@ -96,3 +105,6 @@ ON cart_items(session_id);
 
 CREATE INDEX IF NOT EXISTS index_cart_items_product_id
 ON cart_items(product_id);
+
+CREATE INDEX IF NOT EXISTS index_products_category_id
+ON products(category_id);

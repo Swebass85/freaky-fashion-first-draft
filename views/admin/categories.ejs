@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <title><%= title %></title>
+</head>
+
+<body>
+  <header class="admin__header">
+    <div class="site__header">
+      <h1>Administration</h1>
+    </div>
+  </header>
+
+  <main class="admin__main">
+    <%- include("partials/sidebar") %>
+
+    <section class="produkter">
+      <table class="admin__table">
+        <thead>
+          <tr>
+            <th>Namn</th>
+            <th>Slug</th>
+            <th>Skapad</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% categories.forEach(category => { %>
+            <tr>
+              <td><%= category.name %></td>
+              <td><%= category.slug %></td>
+              <td><%= category.created_at %></td>
+
+              <td class="icons">
+                <form
+                  action="/admin/categories/<%= category.id %>/delete"
+                  method="POST"
+                  class="admin__delete-form"
+                >
+                  <button type="submit" class="admin__icon-button">
+                    <img
+                      src="/icons/trash.svg"
+                      alt="Ta bort kategori"
+                    >
+                  </button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+
+      <a href="/admin/categories/new" class="admin__button">
+        Lägg till kategori
+      </a>
+    </section>
+  </main>
+</body>
+</html>

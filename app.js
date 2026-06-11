@@ -22,13 +22,10 @@ console.log("Using database:", dbPath);
 const db = new Database(dbPath);
 db.pragma("foreign_keys = ON");
 
-// Load and execute schema
 const schemaPath = path.join(__dirname, "database", "schema.sql");
 const schema = fs.readFileSync(schemaPath, "utf8");
 db.exec(schema);
 
-
-// Show existing tables in terminal
 const tables = db.prepare(`
   SELECT name
   FROM sqlite_master
@@ -50,15 +47,19 @@ app.use(cookieParser());
 app.use(session({
   secret: "freaky-fashion-secret",
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    sameSite: "lax"
+  }
 }));
+
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
   res.locals.session = req.session;
   next();
 });
-
-app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
   try {
@@ -71,21 +72,17 @@ app.use((req, res, next) => {
       return next();
     }
 
-    const user = db
-      .prepare(
-        "SELECT id, first_name, email, administrator FROM users WHERE id = ?"
-      )
-      .get(userId);
-
-    console.log("Current user:", user);
+    const user = db.prepare(`
+      SELECT id, first_name, email, administrator
+      FROM users
+      WHERE id = ?
+    `).get(userId);
 
     res.locals.user = user || null;
-    res.locals.isLoggedIn = !!user;
+    res.locals.isLoggedIn = Boolean(user);
     res.locals.isAdmin = user
       ? Number(user.administrator) === 1
       : false;
-
-    console.log("isAdmin local:", res.locals.isAdmin);
 
     next();
   } catch (err) {
@@ -97,6 +94,23 @@ app.use((req, res, next) => {
 
     next();
   }
+});
+
+app.use((req, res, next) => {
+  try {
+    const categories = db.prepare(`
+      SELECT *
+      FROM categories
+      ORDER BY name
+    `).all();
+
+    res.locals.categories = categories;
+  } catch (err) {
+    console.error("Category middleware error:", err);
+    res.locals.categories = [];
+  }
+
+  next();
 });
 
 app.use("/", indexRouter(db));
@@ -111,8 +125,13 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
   console.error("🔥 ERROR:", err);
+
   res.status(err.status || 500);
-  res.send(err.stack);
+
+  res.render("error", {
+    message: err.message || "Something went wrong",
+    error: app.get("env") === "development" ? err : {}
+  });
 });
 
 module.exports = app;

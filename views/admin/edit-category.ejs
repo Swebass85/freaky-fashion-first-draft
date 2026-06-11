@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <title><%= title %></title>
+</head>
+
+<body>
+  <header class="admin__header">
+    <div class="site__header">
+      <h1>Administration</h1>
+    </div>
+  </header>
+
+  <main class="admin__main">
+    <%- include("partials/sidebar") %>
+
+    <section class="admin__forms">
+      <div class="admin__form-card">
+        <h2>Lägg till kategori</h2>
+
+        <form
+          class="admin__form"
+          action="/admin/categories/new"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <label>Namn</label>
+          <input
+            type="text"
+            name="name"
+            maxlength="25"
+            required
+            placeholder="Ange namn"
+          >
+
+          <label>Bild</label>
+          <input
+            type="file"
+            name="image"
+            accept="image/*"
+          >
+
+          <div></div>
+
+          <button type="submit" class="admin__button">
+            Lägg till
+          </button>
+        </form>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/head", {
+    title: category.name,
+    scripts: [
+      "/javascripts/search.js",
+      "/javascripts/favorites.js",
+      "/javascripts/basket.js"
+    ]
+  }) %>
+
+  <body>
+    <%- include("partials/header") %>
+
+    <main class="main">
+      <section class="favorites_hero">
+        <div class="hero__info">
+          <h1><%= category.name %></h1>
+          <p>
+            Här hittar du produkter inom <%= category.name %>.
+          </p>
+        </div>
+
+        <div class="hero__info--1024-wrapper">
+          <div class="hero__info--1024">
+
+            <% if (!locals.user) { %>
+              <h1><%= category.name %></h1>
+            <% } %>
+
+            <% if (locals.user) { %>
+              <h2 class="hero__username">
+                Hej <%= locals.user.first_name %>
+              </h2>
+            <% } %>
+
+            <p>
+              Här hittar du produkter inom <%= category.name %>.
+            </p>
+
+          </div>
+        </div>
+      </section>
+
+      <section class="products">
+
+        <% if (products.length === 0) { %>
+          <p class="empty-category-message">
+            Det finns inga produkter i denna kategori ännu.
+          </p>
+        <% } %>
+
+        <% products.forEach(product => { %>
+          <%- include("partials/product-card", { product }) %>
+        <% }) %>
+
+      </section>
+
+      <%- include("partials/services") %>
+    </main>
+
+    <%- include("partials/footer") %>
+  </body>
+</html>

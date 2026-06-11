@@ -15,17 +15,7 @@
   </header>
 
   <main class="admin__main">
-    <aside class="admin__kategorier">
-      <h3>
-        <a href="/administration">Produkter</a>
-      </h3>
-      <h3>
-        <a href="/categories">Kategorier</a>
-      </h3>
-      <h3>
-      <a href="/">Startsida</a>
-      </h3>
-    </aside>
+    <%- include("partials/sidebar") %>
 
     <section class="produkter">
       <table class="admin__table">
@@ -34,6 +24,7 @@
             <th>Namn</th>
             <th>Beskrivning</th>
             <th>Märke</th>
+            <th>Kategori</th>
             <th>SKU</th>
             <th>Pris</th>
             <th>Publicerad</th>
@@ -47,24 +38,31 @@
               <td><%= product.type %></td>
               <td><%= product.description %></td>
               <td><%= product.brand %></td>
+              <td><%= product.category_name || "-" %></td>
               <td><%= product.sku %></td>
               <td><%= product.price %> kr</td>
               <td><%= product.created_at %></td>
 
               <td class="icons">
                 <span class="penna">
-                  <a href="/administration/products/<%= product.id %>/edit">
-                    <img src="/icons/square-pen.svg" alt="Redigera produkt">
+                  <a href="/admin/products/<%= product.id %>/edit">
+                    <img
+                      src="/icons/square-pen.svg"
+                      alt="Redigera produkt"
+                    >
                   </a>
                 </span>
 
                 <form
-                  action="/administration/products/<%= product.id %>/delete"
+                  action="/admin/products/<%= product.id %>/delete"
                   method="POST"
                   class="admin__delete-form"
                 >
                   <button type="submit" class="admin__icon-button">
-                    <img src="/icons/trash.svg" alt="Ta bort produkt">
+                    <img
+                      src="/icons/trash.svg"
+                      alt="Ta bort produkt"
+                    >
                   </button>
                 </form>
               </td>
@@ -73,7 +71,7 @@
         </tbody>
       </table>
 
-      <a href="/administration/products/new" class="admin__button">
+      <a href="/admin/products/new" class="admin__button">
         Lägg till produkt
       </a>
     </section>

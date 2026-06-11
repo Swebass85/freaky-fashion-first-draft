@@ -7,7 +7,7 @@ const storage = multer.diskStorage({
     cb(null, "public/images/products");
   },
   filename: (req, file, cb) => {
-    const uniqueName = Date.now() + "-" + file.originalname;
+    const uniqueName = Date.now() + "-" + file.originalname.replace(/\s+/g, "-");
     cb(null, uniqueName);
   }
 });
@@ -23,46 +23,57 @@ module.exports = (db) => {
     next();
   }
 
-  router.get("/administration", requireAdmin, (req, res, next) => {
-  try {
-    const products = db.prepare(`
-      SELECT *
-      FROM products
-      ORDER BY id DESC
-    `).all();
+  router.get("/admin/products", requireAdmin, (req, res, next) => {
+    try {
+      const products = db.prepare(`
+        SELECT products.*,
+               categories.name AS category_name
+        FROM products
+        LEFT JOIN categories ON categories.id = products.category_id
+        ORDER BY products.id DESC
+      `).all();
 
-    console.log("Admin products:", products);
-    console.log("Admin product count:", products.length);
+      res.render("admin/administration", {
+        title: "Administration",
+        products
+      });
+    } catch (err) {
+      next(err);
+    }
+  });
 
-    res.render("administration", {
-      title: "Administration",
-      products
-    });
-  } catch (err) {
-    next(err);
-  }
-});
+  router.get("/admin/products/new", requireAdmin, (req, res, next) => {
+    try {
+      const categories = db.prepare(`
+        SELECT *
+        FROM categories
+        ORDER BY name
+      `).all();
 
-  router.get("/administration/products/new", requireAdmin, (req, res) => {
-    res.render("edit-product", {
-      title: "Lägg till produkt",
-      product: {
-        id: null,
-        type: "",
-        description: "",
-        brand: "",
-        sku: "",
-        price: "",
-        picture_front: "",
-        picture_back: "",
-        created_at: ""
-      },
-      isNew: true
-    });
+      res.render("admin/edit-product", {
+        title: "Lägg till produkt",
+        product: {
+          id: null,
+          type: "",
+          description: "",
+          brand: "",
+          sku: "",
+          price: "",
+          picture_front: "",
+          picture_back: "",
+          created_at: "",
+          category_id: ""
+        },
+        categories,
+        isNew: true
+      });
+    } catch (err) {
+      next(err);
+    }
   });
 
   router.post(
-    "/administration/products/new",
+    "/admin/products/new",
     requireAdmin,
     upload.fields([
       { name: "picture_front", maxCount: 1 },
@@ -77,10 +88,11 @@ module.exports = (db) => {
           sku_letters,
           sku_numbers,
           price,
-          created_at
+          created_at,
+          category_id
         } = req.body;
 
-        const sku = `${sku_letters.toUpperCase()} ${sku_numbers}`;
+        const sku = `${sku_letters.toUpperCase()}${sku_numbers}`;
 
         const existingSku = db.prepare(`
           SELECT id
@@ -109,9 +121,10 @@ module.exports = (db) => {
             price,
             picture_front,
             picture_back,
-            created_at
+            created_at,
+            category_id
           )
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `).run(
           type,
           description,
@@ -120,17 +133,18 @@ module.exports = (db) => {
           Number(price),
           pictureFront,
           pictureBack,
-          created_at.replace("T", " ")
+          created_at ? created_at.replace("T", " ") : null,
+          category_id || null
         );
 
-        res.redirect("/administration");
+        res.redirect("/admin/products");
       } catch (err) {
         next(err);
       }
     }
   );
 
-  router.get("/administration/products/:id/edit", requireAdmin, (req, res, next) => {
+  router.get("/admin/products/:id/edit", requireAdmin, (req, res, next) => {
     try {
       const product = db.prepare(`
         SELECT *
@@ -142,9 +156,16 @@ module.exports = (db) => {
         return res.status(404).send("Product not found");
       }
 
-      res.render("edit-product", {
+      const categories = db.prepare(`
+        SELECT *
+        FROM categories
+        ORDER BY name
+      `).all();
+
+      res.render("admin/edit-product", {
         title: "Redigera produkt",
         product,
+        categories,
         isNew: false
       });
     } catch (err) {
@@ -153,7 +174,7 @@ module.exports = (db) => {
   });
 
   router.post(
-    "/administration/products/:id/edit",
+    "/admin/products/:id/edit",
     requireAdmin,
     upload.fields([
       { name: "picture_front", maxCount: 1 },
@@ -168,10 +189,11 @@ module.exports = (db) => {
           sku_letters,
           sku_numbers,
           price,
-          created_at
+          created_at,
+          category_id
         } = req.body;
 
-        const sku = `${sku_letters.toUpperCase()} ${sku_numbers}`;
+        const sku = `${sku_letters.toUpperCase()}${sku_numbers}`;
 
         const existingSku = db.prepare(`
           SELECT id
@@ -207,7 +229,8 @@ module.exports = (db) => {
               price = ?,
               picture_front = ?,
               picture_back = ?,
-              created_at = ?
+              created_at = ?,
+              category_id = ?
           WHERE id = ?
         `).run(
           type,
@@ -217,25 +240,26 @@ module.exports = (db) => {
           Number(price),
           pictureFront,
           pictureBack,
-          created_at.replace("T", " "),
+          created_at ? created_at.replace("T", " ") : null,
+          category_id || null,
           req.params.id
         );
 
-        res.redirect("/administration");
+        res.redirect("/admin/products");
       } catch (err) {
         next(err);
       }
     }
   );
 
-  router.post("/administration/products/:id/delete", requireAdmin, (req, res, next) => {
+  router.post("/admin/products/:id/delete", requireAdmin, (req, res, next) => {
     try {
       db.prepare(`
         DELETE FROM products
         WHERE id = ?
       `).run(req.params.id);
 
-      res.redirect("/administration");
+      res.redirect("/admin/products");
     } catch (err) {
       next(err);
     }

@@ -1,0 +1,133 @@
+So I have added the HTML and CSS I want for my project. I have a SQL server called schema.sql and a database called freakyfashion.db. In my database I have a table where I added this to schema.sql:
+
+CREATE TABLE products (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  type TEXT NOT NULL,
+  brand TEXT NOT NULL,
+  price REAL NOT NULL,
+  picture_front TEXT,
+  picture_back TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+I want to make sure that the "Nyheter" button in products only pops up for products that are less than or equal to seven days old. 
+
+DEFINE JAVASCRIPT
+
+I have a standard ejs project. So my javascript files are database > init.js, routes > index.js, users.js and views > app.js
+
+DEFINE project
+
+I have created an express.js project with a database that I call freakyfashion.db with the following table:
+
+CREATE TABLE products (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  type TEXT NOT NULL,
+  brand TEXT NOT NULL,
+  price REAL NOT NULL,
+  picture_front TEXT,
+  picture_back TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+I have an .sql file called schema.sql. I am using sqlite3 for this project. 
+
+So my javascript files are database > init.js, routes > index.js, users.js and views > app.js
+
+LOGIN function
+
+I want to create a login function, when the user clicks login__icon I wan them to be directed to a login page, we create a new route for this page. 
+
+Folder structure
+
+bin > www
+
+Folder structure EJS project
+database > 
+
+freaky-fashion.db
+init.js
+schema.sql
+
+public >
+
+icons
+images
+
+
+javascripts >
+basket.js
+favorites.js
+search.js
+
+stylesheets >
+style.CSS
+
+ReadMe files
+
+routes >
+
+ administration.js
+ auth.js
+ checkout.js
+ index.js
+ users.js
+
+views >
+
+admin >
+ partials >
+  sidebar.js
+
+administration.ejs
+categories.ejs
+edit-category.ejs
+edit-product.ejs
+partials >
+ footer.ejs
+ head.ejs
+ header.ejs
+ product-card.ejs
+ services.ejs
+
+atabase/
+│
+├── freaky-fashion.db
+├── init.js
+├── schema.sql
+│
+└── middleware/
+    └── requireAuth.js
+
+public/
+├── icons/
+├── images/
+├── javascripts/
+│   ├── basket.js
+│   ├── favorites.js
+│   └── search.js
+└── stylesheets/
+    └── style.css
+
+routes/
+├── administration.js
+├── auth.js
+├── checkout.js
+├── index.js
+└── users.js
+
+views/
+├── admin/
+│   ├── partials/
+│   │   └── sidebar.ejs
+│   ├── administration.ejs
+│   ├── categories.ejs
+│   ├── edit-category.ejs
+│   └── edit-product.ejs
+│
+└── partials/
+    ├── footer.ejs
+    ├── head.ejs
+    ├── header.ejs
+    ├── product-card.ejs
+    └── services.ejs

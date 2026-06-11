@@ -15,3 +15,4 @@ const tables = db.prepare(`
 
 console.log(tables);
 
+db.close();

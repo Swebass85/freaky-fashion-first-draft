@@ -7,26 +7,30 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function setupAddToBasketButtons() {
-  const basketButtons = document.querySelectorAll(".basket-btn");
+  const basketButtons = document.querySelectorAll(".basket-btn, .add-to-cart-btn");
 
   basketButtons.forEach((button) => {
     button.addEventListener("click", async () => {
       const productId = button.dataset.productId;
 
-      const response = await fetch(`/basket/${productId}`, {
-        method: "POST",
-      });
+      try {
+        const response = await fetch(`/basket/${productId}`, {
+          method: "POST",
+        });
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (data.success) {
-        button.classList.toggle("active");
+        if (data.success) {
+          button.classList.add("active");
 
-        const basketCount = document.querySelector("#basket-count");
+          const basketCount = document.querySelector("#basket-count");
 
-        if (basketCount) {
-          basketCount.textContent = data.count;
+          if (basketCount) {
+            basketCount.textContent = data.count;
+          }
         }
+      } catch (err) {
+        console.error("Could not add product to basket:", err);
       }
     });
   });
@@ -41,31 +45,39 @@ function setupQuantitySelectors() {
       const productId = select.dataset.productId;
 
       const productBox = select.closest(".product__page--purchase-box");
-      const priceElement = productBox.querySelector(".product-price");
+      const priceElement = productBox?.querySelector(".product-price");
+
+      if (!productBox || !priceElement) {
+        return;
+      }
 
       const basePrice = Number(priceElement.dataset.price);
       const newPrice = basePrice * quantity;
 
-      priceElement.textContent = `${newPrice} SEK`;
+      try {
+        const response = await fetch(`/basket/update/${productId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ quantity }),
+        });
 
-      updateOrderValue();
+        const data = await response.json();
 
-      const response = await fetch(`/basket/update/${productId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ quantity }),
-      });
+        if (data.success) {
+          priceElement.textContent = `${newPrice} SEK`;
 
-      const data = await response.json();
+          const basketCount = document.querySelector("#basket-count");
 
-      if (data.success) {
-        const basketCount = document.querySelector("#basket-count");
+          if (basketCount) {
+            basketCount.textContent = data.count;
+          }
 
-        if (basketCount) {
-          basketCount.textContent = data.count;
+          updateOrderValue();
         }
+      } catch (err) {
+        console.error("Could not update basket quantity:", err);
       }
     });
   });
@@ -79,7 +91,6 @@ function updateOrderValue() {
   });
 
   const deliveryFee = orderValue > 0 && orderValue < 500 ? 49 : 0;
-
   const total = orderValue + deliveryFee;
 
   const orderValueElement = document.querySelector("#order-value");
@@ -109,74 +120,64 @@ function setupTrashButtons() {
     button.addEventListener("click", async () => {
       const productId = button.dataset.productId;
 
-      const response = await fetch(`/basket/remove/${productId}`, {
-        method: "POST",
-      });
+      try {
+        const response = await fetch(`/basket/remove/${productId}`, {
+          method: "POST",
+        });
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (data.success) {
-        const productBox = button.closest(".product__page--purchase-box");
+        if (data.success) {
+          const productBox = button.closest(".product__page--purchase-box");
 
-        const quantitySelect = productBox.querySelector(
-          ".product__page--quantity",
-        );
-
-        const priceElement = productBox.querySelector(".product-price");
-        const basePrice = Number(priceElement.dataset.price);
-
-        const currentQuantity = Number(quantitySelect.value);
-
-        if (currentQuantity > 1) {
-          const newQuantity = currentQuantity - 1;
-
-          quantitySelect.value = newQuantity;
-          priceElement.textContent = `${basePrice * newQuantity} SEK`;
-        } else {
-          productBox.remove();
-        }
-
-        const basketCount = document.querySelector("#basket-count");
-
-        if (basketCount) {
-          basketCount.textContent = data.count;
-        }
-
-        updateOrderValue();
-
-        const remainingProducts = document.querySelectorAll(
-          ".product__page--purchase-box",
-        );
-
-        if (remainingProducts.length === 0) {
-          const checkoutPayment = document.querySelector(
-            ".checkout__page--payment",
-          );
-
-          const checkoutWrapper = document.querySelector(
-            ".product__page--checkout-wrapper",
-          );
-
-          if (checkoutPayment) {
-            checkoutPayment.remove();
+          if (productBox) {
+            productBox.remove();
           }
 
-          if (checkoutWrapper) {
-            checkoutWrapper.innerHTML = `
-              <div class="empty__shopping-basket">
-                <p class="basket-empty-message">
-                  Din varukorg är tom
-                </p>
+          const basketCount = document.querySelector("#basket-count");
 
-                <img
-                  src="/images/tom_varukorg.png"
-                  class="basket-empty-img"
-                  alt="empty shopping basket"
-                >
-              </div>
-            `;
+          if (basketCount) {
+            basketCount.textContent = data.count;
+          }
+
+          updateOrderValue();
+
+          const remainingProducts = document.querySelectorAll(
+            ".product__page--purchase-box"
+          );
+
+          if (remainingProducts.length === 0) {
+            const checkoutPayment = document.querySelector(
+              ".checkout__page--payment"
+            );
+
+            const checkoutWrapper = document.querySelector(
+              ".product__page--checkout-wrapper"
+            );
+
+            if (checkoutPayment) {
+              checkoutPayment.remove();
+            }
+
+            if (checkoutWrapper) {
+              checkoutWrapper.innerHTML = `
+                <div class="empty__shopping-basket">
+                  <p class="basket-empty-message">
+                    Din varukorg är tom
+                  </p>
+
+                  <img
+                    src="/images/tom_varukorg.png"
+                    class="basket-empty-img"
+                    alt="Tom varukorg"
+                  >
+                </div>
+              `;
+            }
           }
         }
+      } catch (err) {
+        console.error("Could not remove product from basket:", err);
       }
     });
   });

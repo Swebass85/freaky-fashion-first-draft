@@ -1,0 +1,94 @@
+<header>
+  <div class="site__header">
+    <img
+      src="/images/logo-mobile.webp"
+      alt="Freaky Fashion Logo"
+      id="header__logotyp"
+    >
+
+    <div class="header__top">
+      <form class="header__search">
+        <input
+          type="text"
+          id="searchInput"
+          name="q"
+          class="search__bar"
+          placeholder="Sök produkt"
+          autocomplete="off"
+        >
+
+        <div id="searchResults"></div>
+      </form>
+
+      <div class="header__icons">
+        <a href="/favorites" class="favorites-header">
+          <img
+            src="/icons/heart-fill.svg"
+            alt="heart icon"
+            class="nav__icons nav__icons--favorites-size"
+            id="heart__icon"
+          >
+
+          <span class="icon-count" id="favorites-count">
+            <%= session?.favoritesCount || session?.favorites?.length || 0 %>
+          </span>
+        </a>
+
+        <a href="/basket" class="basket-header">
+          <img
+            src="/icons/shopping-basket-thick.svg"
+            class="nav__icons nav__icons--basket-size"
+            alt="basket"
+            id="basket-icon"
+          >
+
+          <span class="icon-count" id="basket-count">
+            <%= session?.basketCount || session?.basket?.length || 0 %>
+          </span>
+        </a>
+
+        <% if (locals.user) { %>
+          <a href="/logout">
+            <img
+              src="/icons/log-out.svg"
+              alt="logout icon"
+              class="nav__icons"
+            >
+          </a>
+        <% } else { %>
+          <a href="/login">
+            <img
+              src="/icons/log-in.svg"
+              alt="login icon"
+              class="nav__icons"
+            >
+          </a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <nav class="header__nav">
+    <ul>
+      <li>
+        <a href="/news">Nyheter</a>
+      </li>
+
+      <% categories.forEach(category => { %>
+        <li>
+          <a href="/categories/<%= category.slug %>">
+            <%= category.name %>
+          </a>
+        </li>
+      <% }) %>
+
+      <% if (isAdmin) { %>
+        <li>
+          <a href="/admin/products">
+            Administration
+          </a>
+        </li>
+      <% } %>
+    </ul>
+  </nav>
+</header>

@@ -1,3 +1,26 @@
-<h1><%= message %></h1>
-<h2><%= error.status %></h2>
-<pre><%= error.stack %></pre>
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/head", {
+    title: "Något gick fel"
+  }) %>
+
+  <body>
+    <%- include("partials/header") %>
+
+    <main class="main">
+      <section class="error-page">
+        <h1>Oj! Något gick fel.</h1>
+
+        <p>
+          Sidan kunde inte visas.
+        </p>
+
+        <a href="/" class="admin__button">
+          Till startsidan
+        </a>
+      </section>
+    </main>
+
+    <%- include("partials/footer") %>
+  </body>
+</html>
