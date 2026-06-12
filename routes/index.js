@@ -127,39 +127,39 @@ module.exports = (db) => {
   }
 });
 
-  router.get("/products/:id", (req, res, next) => {
-    try {
-      const productId = req.params.id;
+  router.get("/products/:slug", (req, res, next) => {
+  try {
+    const productSlug = req.params.slug;
 
-      const product = db.prepare(`
-        SELECT *,
-        julianday('now') - julianday(created_at) AS age_days
-        FROM products
-        WHERE id = ?
-        AND datetime(created_at) <= datetime('now')
-      `).get(productId);
+    const product = db.prepare(`
+      SELECT *,
+      julianday('now') - julianday(created_at) AS age_days
+      FROM products
+      WHERE slug = ?
+      AND datetime(created_at) <= datetime('now')
+    `).get(productSlug);
 
-      if (!product) {
-        return res.status(404).send("Product not found");
-      }
-
-      const relatedProducts = db.prepare(`
-        SELECT *
-        FROM products
-        WHERE id != ?
-        AND datetime(created_at) <= datetime('now')
-        LIMIT 6
-      `).all(productId);
-
-      res.render("products", {
-        title: product.type,
-        product,
-        relatedProducts
-      });
-    } catch (err) {
-      next(err);
+    if (!product) {
+      return res.status(404).send("Product not found");
     }
-  });
+
+    const relatedProducts = db.prepare(`
+      SELECT *
+      FROM products
+      WHERE id != ?
+      AND datetime(created_at) <= datetime('now')
+      LIMIT 6
+    `).all(product.id);
+
+    res.render("products", {
+      title: product.type,
+      product,
+      relatedProducts
+    });
+  } catch (err) {
+    next(err);
+  }
+});
 
   router.post("/favorites/:id", (req, res, next) => {
     try {

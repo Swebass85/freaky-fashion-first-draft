@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS products (
   picture_back TEXT,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   sku TEXT UNIQUE,
+  slug TEXT UNIQUE,
   description TEXT,
   category_id INTEGER,
 

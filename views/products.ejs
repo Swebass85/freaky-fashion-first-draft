@@ -14,11 +14,13 @@
 
     <main class="main">
       <section class="product__page">
-        <img
-          src="<%= product.picture_front %>"
-          alt="Picture of <%= product.type %>"
-          class="product__page--image"
-        >
+        <div class="product__page--image-wrapper">
+          <img
+            src="<%= product.picture_front %>"
+            alt="Picture of <%= product.type %>"
+            class="product__page--image"
+          >
+        </div>
 
         <div class="product__page--info">
           <div class="product__page--header">
@@ -70,40 +72,42 @@
         </div>
       </section>
 
-      <div class="carousel__wrapper">
-        <input type="radio" name="slider" id="slide1" checked>
-        <input type="radio" name="slider" id="slide2">
+      <% if (relatedProducts.length > 0) { %>
+        <div class="carousel__wrapper">
+          <input type="radio" name="slider" id="slide1" checked>
+          <input type="radio" name="slider" id="slide2">
 
-        <div class="carousel">
-          <h1>Liknande produkter</h1>
+          <div class="carousel">
+            <h1>Liknande produkter</h1>
 
-          <div class="carousel-track">
-            <% relatedProducts.forEach(relatedProduct => { %>
-              <div class="carousel-item">
-                <div class="card">
-                  <a href="/products/<%= relatedProduct.id %>">
-                    <div class="product__page--image-wrapper">
-                      <img
-                        src="<%= relatedProduct.picture_front %>"
-                        alt="<%= relatedProduct.type %>"
-                      >
+            <div class="carousel-track">
+              <% relatedProducts.forEach(relatedProduct => { %>
+                <div class="carousel-item">
+                  <div class="card">
+                    <a href="/products/<%= relatedProduct.slug %>">
+                      <div class="product__page--image-wrapper">
+                        <img
+                          src="<%= relatedProduct.picture_front %>"
+                          alt="<%= relatedProduct.type %>"
+                        >
+                      </div>
+                    </a>
+
+                    <div class="card-categories">
+                      <h2><%= relatedProduct.type %></h2>
+                      <h3><%= relatedProduct.price %> SEK</h3>
+                      <p><%= relatedProduct.brand %></p>
                     </div>
-                  </a>
-
-                  <div class="card-categories">
-                    <h2><%= relatedProduct.type %></h2>
-                    <h3><%= relatedProduct.price %> SEK</h3>
-                    <p><%= relatedProduct.brand %></p>
                   </div>
                 </div>
-              </div>
-            <% }) %>
-          </div>
+              <% }) %>
+            </div>
 
-          <label for="slide1" class="carousel__nav prev">‹</label>
-          <label for="slide2" class="carousel__nav next">›</label>
+            <label for="slide1" class="carousel__nav prev">‹</label>
+            <label for="slide2" class="carousel__nav next">›</label>
+          </div>
         </div>
-      </div>
+      <% } %>
 
       <%- include("partials/services") %>
     </main>
